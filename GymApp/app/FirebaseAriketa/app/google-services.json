@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "475750930665",
+    "project_id": "ariketaspootify",
+    "storage_bucket": "ariketaspootify.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475750930665:android:6b81c9aa66db24362ef878",
+        "android_client_info": {
+          "package_name": "com.example.firebaseariketa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwGPqF8gBuL6vJl-art68wQYKTX9ksFKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

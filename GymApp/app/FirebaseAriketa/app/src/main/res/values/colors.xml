@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Purple80">#FFD0BCFF</color>
+    <color name="PurpleGrey80">#FFCCC2DC</color>
+    <color name="Pink80">#FFEFB8C8</color>
+
+    <color name="Purple40">#FF6650a4</color>
+    <color name="PurpleGrey40">#FF625b71</color>
+    <color name="Pink40">#FF7D5260</color>
+    <color name="White">#ffffff</color>
+
+    <color name="Gray">#FF393939</color>
+    <color name="Black">#FF121212</color>
+    <color name="Green">#FF49dd63</color>
+    <color name="BackgroundButton">#FF111111</color>
+    <color name="ShapeButton">#FF3e3e3e</color>
+
+    <color name="SelectedField">#FF7c7c7c</color>
+    <color name="UnselectedField">#FF4a4a4a</color>
+</resources>
