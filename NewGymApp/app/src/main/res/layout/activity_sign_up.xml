@@ -26,8 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Email"
+
+        android:text="@string/email"
         android:textColor="@color/White"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Password"
+        android:text="@string/password"
         android:textColor="@color/White"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -78,38 +78,125 @@
 
     </EditText>
     <TextView
+        android:id="@+id/tvNewUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/newUserName"
+        android:textColor="@color/White"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword"></TextView>
+
+    <EditText
+        android:id="@+id/etNewName"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/radiousstyle"
+        android:textSize="20sp"
+        android:textColor="@color/White"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNewUserName"
+        android:paddingStart="10dp">
+    </EditText>
+
+    <TextView
+        android:id="@+id/tvNewLastName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/newUserLastName"
+        android:textColor="@color/White"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNewName"></TextView>
+
+    <EditText
+        android:id="@+id/etNewLastName"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/White"
+        android:background="@drawable/radiousstyle"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNewLastName"
+        android:paddingStart="10dp">
+
+    </EditText>
+    <TextView
+        android:id="@+id/tvNewBirthdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/newBirthdate"
+        android:textColor="@color/White"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNewLastName"></TextView>
+
+    <EditText
+        android:id="@+id/etNewBirthdate"
+        android:layout_width="120dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/White"
+        android:background="@drawable/radiousstyle"
+        android:textSize="15sp"
+        android:textColorHint="@color/White"
+        android:inputType="date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNewBirthdate"
+        android:paddingStart="15dp"
+        android:hint="YYYY-MM-DD">
+
+    </EditText>
+    <TextView
         android:id="@+id/usertypetv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNewLastName"
+        app:layout_constraintStart_toStartOf="@id/etNewBirthdate"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="What are you?"
-        android:layout_marginTop="15dp"
+        android:text="@string/whatAreYou"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="195dp"
+
         ></TextView>
 
     <Switch
         android:id="@+id/toggleusertype"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="45dp"
         android:focusedSearchResultHighlightColor="@color/HV"
         android:outlineAmbientShadowColor="@color/HV"
         android:searchResultHighlightColor="@color/HV"
-        android:text="Client"
+        android:text="@string/client"
         android:textColor="@color/UnselectedField"
         android:textSize="15dp"
-
+        android:layout_marginLeft="20dp"
         android:thumbTint="@color/HV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/etNewBirthdate"
         app:layout_constraintTop_toBottomOf="@+id/usertypetv" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/toggleusertype"
         app:layout_constraintTop_toBottomOf="@+id/usertypetv"
-        android:text="Trainer"
+        android:text="@string/trainer"
         android:textColor="@color/HV"
         android:textSize="15dp"
         android:layout_marginLeft="10dp"
@@ -123,17 +210,17 @@
         android:layout_marginTop="18dp"
         android:padding="8dp"
         android:backgroundTint="@color/HV"
-        android:text="Sign Up"
+        android:text="@string/signUp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleusertype"
+        app:layout_constraintTop_toBottomOf="@+id/etNewBirthdate"
         ></Button>
 
     <TextView
         android:id="@+id/altquest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You Already have an account?"
+        android:text="@string/haveAnAccount"
         app:layout_constraintTop_toBottomOf="@id/btnSignUp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,7 +233,7 @@
         android:id="@+id/loginlinktv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log in"
+        android:text="@string/logIn"
         app:layout_constraintTop_toBottomOf="@id/altquest"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

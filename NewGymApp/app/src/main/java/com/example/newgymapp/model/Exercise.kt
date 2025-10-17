@@ -1,8 +1,9 @@
 package com.example.newgymapp.model
 
 class Exercise (
-    val name: String = "",
-    val description: String ="",
-    val videolink : String = ""
+    var exName: String = "",
+    var reps : Number = 0,
+    var sets : Number = 0,
+    var videolink : String = ""
 ) {
 }

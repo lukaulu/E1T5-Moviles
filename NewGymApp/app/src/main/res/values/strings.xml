@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">NewGymApp</string>
+
+    <string name="signUp">Sign up</string>
+    <string name="logIn">Log in</string>
+
+    <string name="notAnAccount">Don´t have an account?</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="whatAreYou">What are you?</string>
+    <string name="client">Client</string>
+    <string name="trainer">Trainer</string>
+    <string name="haveAnAccount">You already have an account?</string>
+
+    <string name="newUserName">Name</string>
+    <string name="newUserLastName">Last Name</string>
+    <string name="newBirthdate">Birth date</string>
+    <string name="finishSignUp">Finish</string>
+
+
+
 </resources>

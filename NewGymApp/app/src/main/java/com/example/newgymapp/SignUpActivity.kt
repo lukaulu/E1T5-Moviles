@@ -21,6 +21,10 @@ private lateinit var etUser: EditText;
 private lateinit var etPassword: EditText;
 private lateinit var loginlink: TextView;
 private lateinit var switchbutton: Switch;
+private lateinit var etName: EditText;
+private lateinit var etLastName: EditText;
+private lateinit var etBirthdate: EditText;
+
 
 private var db = FirebaseSingleton.db
 
@@ -50,7 +54,12 @@ class SignUpActivity : AppCompatActivity() {
 
                     var newuser = User(
                         email = etUser.text.toString(),
-                        password = etPassword.text.toString()
+                        password = etPassword.text.toString(),
+                        name = etName.text.toString(),
+                        lastName = etLastName.text.toString(),
+                        birthdate = etBirthdate.text.toString(),
+
+
                     )
                     if (switchbutton.isChecked){
                         newuser.trainer = true
@@ -58,7 +67,7 @@ class SignUpActivity : AppCompatActivity() {
                         newuser.trainer = false
                     }
 
-                    db.collection("Usurios").add(newuser)
+                    db.collection("users").add(newuser)
                         .addOnSuccessListener {
                             Log.i("UCM","usuario insertado en la bd con exito")
                         }.addOnFailureListener {
@@ -92,6 +101,9 @@ class SignUpActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
         loginlink = findViewById(R.id.loginlinktv)
         switchbutton = findViewById(R.id.toggleusertype)
+        etName= findViewById(R.id.etNewName)
+        etLastName= findViewById(R.id.etNewLastName)
+        etBirthdate = findViewById(R.id.etNewBirthdate)
 
     }
 }
