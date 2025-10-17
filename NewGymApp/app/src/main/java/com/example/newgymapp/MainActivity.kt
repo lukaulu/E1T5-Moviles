@@ -3,17 +3,19 @@ package com.example.newgymapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.newgymapp.model.User
+import kotlinx.coroutines.tasks.await
 
 private lateinit var btnSignUp : Button;
 private lateinit var btnLogin : Button;
 
 class MainActivity : AppCompatActivity() {
 
-    /*
     override fun onStart() {
         super.onStart()
         val auth = FirebaseSingleton.auth
@@ -31,7 +33,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-     */
+
+
+
 
 
 
@@ -66,4 +70,27 @@ class MainActivity : AppCompatActivity() {
         btnSignUp = findViewById(R.id.btnSignUpMain);
         btnLogin = findViewById<Button>(R.id.btnLogin);
     }
+/*
+    suspend fun dbCharge(): MutableList<User> {
+
+        val users = mutableListOf<User>()
+        val userSnapshot = db.collection("Usurios").get().await()
+
+        for (userDoc in userSnapshot.documents) {
+            val name = userDoc.getString("Nombre") ?: ""
+            val surname = userDoc.getString("Apellido") ?: ""
+            val email = userDoc.getString("Email") ?: ""
+            val password = userDoc.getString("Contraseña") ?: ""
+            val trainer = userDoc.getBoolean("Entrenador") ?: ""
+
+
+            users.add(User(name, surname,email, password, trainer as Boolean))
+
+        }
+
+        return users
+    }
+
+ */
+
 }

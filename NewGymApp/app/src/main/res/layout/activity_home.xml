@@ -9,6 +9,23 @@
     android:background="@color/Black"
     android:orientation="vertical"
     android:layout_gravity="top">
+
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:background="@color/UnselectedField"
+        android:layout_marginTop="80dp"
+
+
+        ></LinearLayout>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/arrowfoward50"
+        android:backgroundTint="@color/HV"
+
+        ></ImageButton>
+
     <TextView
         android:id="@+id/wellcometv"
         android:layout_width="wrap_content"

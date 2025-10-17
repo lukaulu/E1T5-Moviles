@@ -10,8 +10,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.newgymapp.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.tasks.await
+import kotlin.text.get
+import kotlin.text.toInt
 
 
 private lateinit var etEmail : EditText;
@@ -19,6 +23,7 @@ private lateinit var etPassword : EditText;
 
 private lateinit var  btnLogin: Button;
 private lateinit var signuplink: TextView;
+private var db = FirebaseSingleton.db
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +52,10 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
 
                 }.addOnFailureListener {
-                    Log.i("UCM", "error de log de usuario")
+                    val users = mutableListOf<User>()
+
+
+
 
                 }
 
@@ -63,4 +71,6 @@ class LoginActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
         signuplink = findViewById(R.id.signuplinktv)
     }
+
+
 }

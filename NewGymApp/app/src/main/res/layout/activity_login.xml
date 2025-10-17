@@ -10,6 +10,7 @@
 
 
 
+
     <ImageView
         android:id="@+id/hvimg"
         android:layout_width="350dp"
@@ -30,7 +31,7 @@
         android:layout_marginTop="16dp"
         android:text="Email"
         android:textColor="@color/White"
-        android:textSize="32sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hvimg"></TextView>
@@ -38,15 +39,16 @@
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="35dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/UnselectedField"
         android:textSize="20sp"
         android:textColor="@color/White"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEmail">
+        app:layout_constraintTop_toBottomOf="@id/tvEmail"
+        android:background="@drawable/radiousstyle"
+        android:paddingStart="10dp">
     </EditText>
 
     <TextView
@@ -57,7 +59,7 @@
         android:layout_marginTop="16dp"
         android:text="Password"
         android:textColor="@color/White"
-        android:textSize="32sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etEmail"></TextView>
@@ -66,21 +68,22 @@
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="35dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:textColor="@color/White"
-        android:background="@color/UnselectedField"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPassword">
+        app:layout_constraintTop_toBottomOf="@id/tvPassword"
+        android:background="@drawable/radiousstyle"
+        android:paddingStart="10dp">
 
     </EditText>
 
     <Button
         android:id="@+id/btnLogIn"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:padding="8dp"
@@ -94,7 +97,7 @@
         android:id="@+id/altquest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You don't have an account?"
+        android:text="Don't have an account?"
         app:layout_constraintTop_toBottomOf="@id/btnLogIn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
