@@ -1,17 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-
-    alias(libs.plugins.googleService)
-    alias(libs.plugins.crashlytics)
 }
 
 android {
-    namespace = "com.example.gymapp"
+    namespace = "com.example.defapp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.gymapp"
+        applicationId = "com.example.defapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -39,11 +36,6 @@ android {
 }
 
 dependencies {
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

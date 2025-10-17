@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "502582077307",
+    "project_id": "empleadosbd-7f34f",
+    "storage_bucket": "empleadosbd-7f34f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502582077307:android:314350cf249a5416f3ffde",
+        "android_client_info": {
+          "package_name": "com.example.newgymapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlY0Jga7hvi941vNDZiHBWclmds6a-V2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

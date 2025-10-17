@@ -1,43 +1,37 @@
-package com.example.gymapp
+package com.example.newgymapp
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat.enableEdgeToEdge
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.auth.FirebaseAuth
-
 
 private lateinit var btnSignUp : Button;
 private lateinit var btnLogin : Button;
 
-
 class MainActivity : AppCompatActivity() {
 
+    /*
     override fun onStart() {
         super.onStart()
-        val auth = FirebaseSingleton
+        val auth = FirebaseSingleton.auth
         val currentUser = auth.currentUser
         if(currentUser != null){
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
 
-        val toast = Toast.makeText(
-            applicationContext,
-            "Wellcome back " + currentUser?.email + "!",
-            Toast.LENGTH_SHORT
-        )
-        toast.show()}
+            val toast = Toast.makeText(
+                applicationContext,
+                "Wellcome back " + currentUser?.email + "!",
+                Toast.LENGTH_SHORT
+            )
+            toast.show()}
 
     }
 
-
-
+     */
 
 
 

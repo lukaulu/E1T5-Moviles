@@ -2,16 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 
+
     alias(libs.plugins.googleService)
     alias(libs.plugins.crashlytics)
 }
 
 android {
-    namespace = "com.example.gymapp"
+    namespace = "com.example.newgymapp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.gymapp"
+        applicationId = "com.example.newgymapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
