@@ -88,11 +88,8 @@ class SignUpActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-        switchbutton.setOnClickListener {
-            if (switchbutton.isChecked){
 
-            }
-        }
+        
     }
 
     private fun initComponents(){
