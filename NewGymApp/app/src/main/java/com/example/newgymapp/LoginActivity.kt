@@ -1,3 +1,4 @@
+// kotlin
 package com.example.newgymapp
 
 import android.content.Intent
@@ -6,23 +7,23 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.newgymapp.model.User
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlin.text.get
-import kotlin.text.toInt
+import kotlinx.coroutines.withContext
 
+private lateinit var etEmail : EditText
+private lateinit var etPassword : EditText
 
-private lateinit var etEmail : EditText;
-private lateinit var etPassword : EditText;
-
-private lateinit var  btnLogin: Button;
-private lateinit var signuplink: TextView;
+private lateinit var btnLogin: Button
+private lateinit var signuplink: TextView
 private var db = FirebaseSingleton.db
 
 class LoginActivity : AppCompatActivity() {
@@ -40,37 +41,72 @@ class LoginActivity : AppCompatActivity() {
         initListeners()
     }
 
-    private fun initListeners(){
-
-
+    private fun initListeners() {
         btnLogin.setOnClickListener {
-            val auth = Firebase.auth
-            auth.signInWithEmailAndPassword(etEmail.text.toString()+ "@gmail.com", etPassword.text.toString())
+            val auth = FirebaseSingleton.auth
+            val intent = Intent(this, HomeActivity::class.java)
+
+            auth.signInWithEmailAndPassword(etEmail.text.toString() + "@gmail.com", etPassword.text.toString())
                 .addOnSuccessListener {
                     Log.i("UCM", "usuario logeado")
-                    val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
-
-                }.addOnFailureListener {
-                    val users = mutableListOf<User>()
-
-
-
-
                 }
-
+                .addOnFailureListener {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val login = usersLogDB()
+                        withContext(Dispatchers.Main) {
+                            if (login) {
+                                // Si existe en la BD, creamos el usuario en Firebase Auth y navegamos al Home
+                                auth.createUserWithEmailAndPassword(
+                                    etEmail.text.toString() + "@gmail.com",
+                                    etPassword.text.toString()
+                                ).addOnSuccessListener {
+                                    startActivity(intent)
+                                }.addOnFailureListener { ex ->
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Error creating user: ${ex.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } else {
+                                Log.i("UCM", "Error login")
+                                Toast.makeText(
+                                    applicationContext,
+                                    "The user and password are wrong",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
         }
+
+        // Listener separado para el link de signup
         signuplink.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
     }
-    private fun initComponents(){
+
+    private fun initComponents() {
         btnLogin = findViewById(R.id.btnLogIn)
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         signuplink = findViewById(R.id.signuplinktv)
     }
 
+    suspend fun usersLogDB() : Boolean {
+        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
 
+        for (userDoc in userSnapshot.documents) {
+            if (userDoc.getString("email") == etEmail.text.toString() + "@gmail.com" &&
+                userDoc.getString("password") == etPassword.text.toString()) {
+                Log.i("UCM", "login seteado a true")
+                return true
+            }
+        }
+        Log.i("UCM", "login seteado a false")
+        return false
+    }
 }

@@ -1,14 +1,29 @@
 package com.example.newgymapp
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.firebaseariketa.rvArtist.WorkoutAdapter
+import com.example.newgymapp.model.Workout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class HomeActivity : AppCompatActivity() {
 
+    val db = FirebaseSingleton.db
+    var workouts :List<Workout> = emptyList()
+
+    private lateinit var workoutAdapter: WorkoutAdapter
+    private lateinit var rvWorkout:RecyclerView
 
     private lateinit var wellcometv : TextView;
     private val auth = FirebaseSingleton.auth
@@ -26,13 +41,66 @@ class HomeActivity : AppCompatActivity() {
 
         initComponents()
         //initListeners()
+        initUI()
+
     }
 
-    private fun initComponents(){
-        wellcometv= findViewById(R.id.wellcometv)
+    private fun initComponents() {
+        wellcometv = findViewById(R.id.wellcometv)
 
 
         val currentUser = auth.currentUser
         wellcometv.text = "Hello " + currentUser?.email
+
+        rvWorkout = findViewById(R.id.rvWorkout)
+
     }
+
+    private fun initUI() {
+        workoutAdapter = WorkoutAdapter(workouts)
+        rvWorkout.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvWorkout.adapter = workoutAdapter
+
+        CoroutineScope(Dispatchers.IO).launch {
+            workouts = dbChargeWorkouts()
+
+            withContext(Dispatchers.Main) {
+                workoutAdapter.workouts = workouts
+                workoutAdapter.notifyDataSetChanged()
+
+            }
+        }
+    }
+
+
+
+
+
+
+    suspend fun dbChargeWorkouts() :  List<Workout>{
+
+        var workouts = mutableListOf<Workout>()
+        val workoutSnapshot = FirebaseSingleton.db.collection("workouts").get().await()
+
+        for (workoutDoc in workoutSnapshot.documents) {
+            val name = workoutDoc.getString("name") ?: ""
+            val level = workoutDoc.getString("level") ?: ""
+
+            workouts.add(
+                Workout(
+                    name = name,
+                    level = level,
+                    exercises = emptyList()
+                )
+            )
+            Log.i("UCM", name)
+            Log.i("UCM", level)
+        }
+
+        return workouts
+
+    }
+
+
+
 }

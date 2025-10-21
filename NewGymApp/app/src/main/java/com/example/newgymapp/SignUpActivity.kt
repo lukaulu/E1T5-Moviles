@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -59,7 +60,6 @@ class SignUpActivity : AppCompatActivity() {
                         lastName = etLastName.text.toString(),
                         birthdate = etBirthdate.text.toString(),
 
-
                     )
                     if (switchbutton.isChecked){
                         newuser.trainer = true
@@ -80,8 +80,14 @@ class SignUpActivity : AppCompatActivity() {
 
                 }.addOnFailureListener {
                     Log.i("UCM", "error de insercion de usuario")
+                    val toast = Toast.makeText(
+                        applicationContext,
+                        "You are already signed up",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()}
 
-                }
+
 
         }
         loginlink.setOnClickListener {
@@ -89,7 +95,8 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        
+
+
     }
 
     private fun initComponents(){

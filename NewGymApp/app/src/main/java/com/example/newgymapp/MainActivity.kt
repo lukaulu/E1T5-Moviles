@@ -21,7 +21,7 @@ private lateinit var btnLogin : Button;
 
 class MainActivity : AppCompatActivity() {
 
-    /*
+
     override fun onStart() {
         super.onStart()
         val auth = FirebaseSingleton.auth
@@ -38,10 +38,6 @@ class MainActivity : AppCompatActivity() {
             toast.show()}
 
     }
-
-     */
-
-
 
 
 
