@@ -87,14 +87,16 @@
         android:gravity="center">
         <ImageButton
             android:id="@+id/statsWorkout"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"></ImageButton>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/stats50"></ImageButton>
         <ImageButton
             android:id="@+id/historicalWorkout"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"></ImageButton>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/stats50"></ImageButton>
     </LinearLayout>
 
 
