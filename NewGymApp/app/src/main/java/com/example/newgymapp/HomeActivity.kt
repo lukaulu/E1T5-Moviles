@@ -5,11 +5,13 @@ import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaseariketa.rvArtist.WorkoutAdapter
+import com.example.newgymapp.model.Exercise
 import com.example.newgymapp.model.Workout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +26,9 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var workoutAdapter: WorkoutAdapter
     private lateinit var rvWorkout:RecyclerView
-
     private lateinit var wellcometv : TextView;
     private val auth = FirebaseSingleton.auth
+    private lateinit var itemCard : CardView;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,17 +42,24 @@ class HomeActivity : AppCompatActivity() {
 
 
         initComponents()
-        //initListeners()
+        initListeners()
         initUI()
 
     }
 
+    private fun initListeners() {
+
+
+
+    }
+
     private fun initComponents() {
+        itemCard = findViewById(R.id.itemViewContainer)
         wellcometv = findViewById(R.id.wellcometv)
 
 
         val currentUser = auth.currentUser
-        wellcometv.text = "Hello " + currentUser?.email
+        wellcometv.text = "Hello " + currentUser?.email?.substringBefore("@")
 
         rvWorkout = findViewById(R.id.rvWorkout)
 
@@ -85,16 +94,29 @@ class HomeActivity : AppCompatActivity() {
         for (workoutDoc in workoutSnapshot.documents) {
             val name = workoutDoc.getString("name") ?: ""
             val level = workoutDoc.getString("level") ?: ""
+            val image = workoutDoc.getString("image") ?: ""
+
+            val exercisesRaw = workoutDoc.get("exercises") as? List<Map<String, Any>>
+
+
+            val exercisesList = exercisesRaw?.map { exerciseMap ->
+
+                Exercise(
+                    exName = exerciseMap["exName"] as? String ?: "",
+                    reps = exerciseMap["repetitions"] as? Long ?: 0,
+                    sets = exerciseMap["series"] as? Long ?: 0
+                )
+            } ?: emptyList()
+            Log.i("UCM","exercisesList: $exercisesList")
 
             workouts.add(
                 Workout(
                     name = name,
                     level = level,
-                    exercises = emptyList()
+                    exercises = exercisesList,
+                    imglink = image
                 )
             )
-            Log.i("UCM", name)
-            Log.i("UCM", level)
         }
 
         return workouts

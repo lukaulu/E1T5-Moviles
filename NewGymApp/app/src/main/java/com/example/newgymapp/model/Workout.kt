@@ -6,7 +6,8 @@ data class Workout (
 
     val name: String = "",
     val level: String ="",
-    val exercises : List<Exercise>
+    val exercises : List<Exercise>,
+    val imglink : String = ""
 ){
 
 }

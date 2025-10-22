@@ -84,19 +84,28 @@
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity="center">
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        >
         <ImageButton
             android:id="@+id/statsWorkout"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:background="@drawable/stats50"></ImageButton>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="2dp"
+            android:layout_height="80dp"
+            app:dividerColor="@color/Black"
+            android:layout_margin="60dp"
+            >
+            </com.google.android.material.divider.MaterialDivider>
         <ImageButton
             android:id="@+id/historicalWorkout"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="20dp"
-            android:background="@drawable/stats50"></ImageButton>
+            android:background="@drawable/historicalworkouts50"></ImageButton>
     </LinearLayout>
 
 

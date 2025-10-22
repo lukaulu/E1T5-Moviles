@@ -19,7 +19,8 @@
         android:src="@drawable/heavyspace_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 
 
@@ -77,15 +78,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPassword"
         android:background="@drawable/radiousstyle"
-        android:paddingStart="10dp">
+        android:paddingStart="10dp"
+        android:inputType="textPassword">
 
     </EditText>
+    <TextView
+        android:id="@+id/remembermetv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/rememberme"
+        android:textColor="@color/White"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword"></TextView>
+
+    <CheckBox
+        android:id="@+id/remembermecheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/remembermetv"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword"
+        android:layout_marginTop="8dp"
+        ></CheckBox>
 
     <Button
         android:id="@+id/btnLogIn"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="58dp"
         android:padding="8dp"
         android:backgroundTint="@color/HV"
         android:text="@string/logIn"

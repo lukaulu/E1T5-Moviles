@@ -1,5 +1,6 @@
 package com.example.firebaseariketa.rvArtist
 
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,5 +16,20 @@ class WorkoutViewHolder (view: View): RecyclerView.ViewHolder(view){
 
     fun render(workout: Workout){
         tvName.text = workout.name
+        var link = "@drawable/" + workout.imglink
+        val ctx = itemView.context
+
+        //sacar el id desde la carpeta drawable
+        val afterSlash = link.substringAfterLast('/', link)
+        val resName = afterSlash.substringBeforeLast('.', afterSlash)
+        val resId = ctx.resources.getIdentifier(resName, "drawable", ctx.packageName)
+
+        if (resId != 0) {
+            ivWorkout.setImageResource(resId)
+        } else {
+            // fallback
+            ivWorkout.setImageResource(android.R.drawable.ic_menu_report_image)
+        }
     }
+
 }

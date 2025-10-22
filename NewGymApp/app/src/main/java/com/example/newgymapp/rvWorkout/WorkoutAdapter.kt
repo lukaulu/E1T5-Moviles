@@ -15,7 +15,7 @@ class WorkoutAdapter(var workouts: List<Workout>):RecyclerView.Adapter<WorkoutVi
     }
 
     override fun getItemCount(): Int {
-        Log.i("ROI","${workouts.size}")
+
         return workouts.size
     }
 

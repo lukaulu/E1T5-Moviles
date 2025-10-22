@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -21,10 +22,12 @@ import kotlinx.coroutines.withContext
 
 private lateinit var etEmail : EditText
 private lateinit var etPassword : EditText
-
 private lateinit var btnLogin: Button
 private lateinit var signuplink: TextView
+
 private var db = FirebaseSingleton.db
+
+private lateinit var remembermeChekBox : CheckBox
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +90,20 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
+
+        remembermeChekBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                Log.i("UCM", "Remember me checked")
+
+
+            } else {
+                Log.i("UCM", "Remember me unchecked")
+                val auth = FirebaseSingleton.auth
+                auth.currentUser
+
+            }
+        }
+
     }
 
     private fun initComponents() {
@@ -94,6 +111,7 @@ class LoginActivity : AppCompatActivity() {
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         signuplink = findViewById(R.id.signuplinktv)
+        remembermeChekBox = findViewById(R.id.remembermecheckbox)
     }
 
     suspend fun usersLogDB() : Boolean {
