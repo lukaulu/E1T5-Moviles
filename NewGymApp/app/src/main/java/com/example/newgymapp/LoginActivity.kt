@@ -52,6 +52,18 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(etEmail.text.toString() + "@gmail.com", etPassword.text.toString())
                 .addOnSuccessListener {
                     Log.i("UCM", "usuario logeado")
+                    if (remembermeChekBox.isChecked) {
+                        Log.i("UCM", "Remember me checked")
+
+
+                    } else {
+                        Log.i("UCM", "Remember me unchecked")
+                        val auth = FirebaseSingleton.auth
+                        auth.currentUser?.let {
+                            auth.signOut()
+                        }
+
+                    }
                     startActivity(intent)
                 }
                 .addOnFailureListener {
@@ -64,6 +76,18 @@ class LoginActivity : AppCompatActivity() {
                                     etEmail.text.toString() + "@gmail.com",
                                     etPassword.text.toString()
                                 ).addOnSuccessListener {
+                                    if (remembermeChekBox.isChecked) {
+                                        Log.i("UCM", "Remember me checked")
+
+
+                                    } else {
+                                        Log.i("UCM", "Remember me unchecked")
+                                        val auth = FirebaseSingleton.auth
+                                        auth.currentUser?.let {
+                                            auth.signOut()
+                                        }
+
+                                    }
                                     startActivity(intent)
                                 }.addOnFailureListener { ex ->
                                     Toast.makeText(
@@ -86,23 +110,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Listener separado para el link de signup
-        signuplink.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
+        signuplink.setOnClickListener { val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
+
         }
 
-        remembermeChekBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Log.i("UCM", "Remember me checked")
 
-
-            } else {
-                Log.i("UCM", "Remember me unchecked")
-                val auth = FirebaseSingleton.auth
-                auth.currentUser
-
-            }
-        }
 
     }
 

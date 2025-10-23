@@ -1,0 +1,66 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="16dp"
+    android:id="@+id/itemViewContainer"
+    app:cardCornerRadius="12dp"
+
+
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+
+        >
+        <TextView
+            android:id="@+id/historicalName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="aaaaaaa"
+            ></TextView>
+        <TextView
+            android:id="@+id/historicalLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/historicalName"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="aaaaaaa"
+
+            ></TextView>
+        <TextView
+            android:id="@+id/historicalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/historicalLevel"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="aaaaaaa"
+            ></TextView>
+        <TextView
+            android:id="@+id/historicalDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/historicalTime"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="aaaaaaa"
+            ></TextView>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

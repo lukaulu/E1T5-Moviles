@@ -1,7 +1,10 @@
 package com.example.newgymapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +13,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.firebaseariketa.rvArtist.HistoricalAdapter
 import com.example.firebaseariketa.rvArtist.WorkoutAdapter
 import com.example.newgymapp.model.Exercise
+import com.example.newgymapp.model.HistoricalWorkout
 import com.example.newgymapp.model.Workout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,12 +28,22 @@ class HomeActivity : AppCompatActivity() {
 
     val db = FirebaseSingleton.db
     var workouts :List<Workout> = emptyList()
+    var historical :List<HistoricalWorkout> = emptyList()
 
-    private lateinit var workoutAdapter: WorkoutAdapter
+
+private lateinit var workoutAdapter: WorkoutAdapter;
+    private lateinit var historicalAdapter: HistoricalAdapter;
     private lateinit var rvWorkout:RecyclerView
+    private lateinit var rvHistorical:RecyclerView
     private lateinit var wellcometv : TextView;
-    private val auth = FirebaseSingleton.auth
+    private val auth = FirebaseSingleton.auth;
     private lateinit var itemCard : CardView;
+    private lateinit var logout: ImageButton;
+    private lateinit var filterRG : RadioGroup;
+    private lateinit var profiletv : TextView
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +56,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
+
         initComponents()
         initListeners()
         initUI()
@@ -48,24 +64,60 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
+        logout.setOnClickListener {
+            auth.signOut()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
+        filterRG.setOnCheckedChangeListener { group, checkedId ->
+            var filteredWorkouts: List<Workout> = when (checkedId){
+                R.id.begginerRB -> {
+                    workouts.filter { it.level.equals("Begginer", ignoreCase = true) }
+                }
+                R.id.middleRB -> {
+                    workouts.filter { it.level.equals("Middle", ignoreCase = true) }
+                }
+                R.id.advancedRB -> {
+                    workouts.filter { it.level.equals("Advanced", ignoreCase = true) }
+                }
+                R.id.allRB -> {
+                    workouts
+                }
+                else -> {
+                    workouts
+                }
+            }
+
+            workoutAdapter.workouts = filteredWorkouts
+            workoutAdapter.notifyDataSetChanged()
+            }
 
 
     }
 
     private fun initComponents() {
+        filterRG = findViewById(R.id.radioGroupLevels)
+        filterRG.check(R.id.allRB)
+
         itemCard = findViewById(R.id.itemViewContainer)
         wellcometv = findViewById(R.id.wellcometv)
 
+        profiletv = findViewById(R.id.profiletv)
+
+
 
         val currentUser = auth.currentUser
-        wellcometv.text = "Hello " + currentUser?.email?.substringBefore("@")
-
+        wellcometv.text = "Hello " + currentUser?.email?.substringBefore("@") + "!"
+        profiletv.text = currentUser?.email?.substringBefore("@")
         rvWorkout = findViewById(R.id.rvWorkout)
+        logout = findViewById(R.id.logoutbtn)
+        rvHistorical = findViewById(R.id.rvHistorical)
 
     }
 
     private fun initUI() {
+
         workoutAdapter = WorkoutAdapter(workouts)
         rvWorkout.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvWorkout.adapter = workoutAdapter
@@ -79,6 +131,22 @@ class HomeActivity : AppCompatActivity() {
 
             }
         }
+        Log.i("UCM", "llega")
+
+        historicalAdapter = HistoricalAdapter(historical)
+        rvHistorical.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvHistorical.adapter = historicalAdapter
+
+        CoroutineScope(Dispatchers.IO).launch {
+            historical = dbChargeHistorical()
+
+            withContext(Dispatchers.Main) {
+                historicalAdapter.historical = historical
+                historicalAdapter.notifyDataSetChanged()
+
+            }
+        }
+
     }
 
 
@@ -94,7 +162,7 @@ class HomeActivity : AppCompatActivity() {
         for (workoutDoc in workoutSnapshot.documents) {
             val name = workoutDoc.getString("name") ?: ""
             val level = workoutDoc.getString("level") ?: ""
-            val image = workoutDoc.getString("image") ?: ""
+
 
             val exercisesRaw = workoutDoc.get("exercises") as? List<Map<String, Any>>
 
@@ -107,19 +175,59 @@ class HomeActivity : AppCompatActivity() {
                     sets = exerciseMap["series"] as? Long ?: 0
                 )
             } ?: emptyList()
-            Log.i("UCM","exercisesList: $exercisesList")
+
 
             workouts.add(
                 Workout(
                     name = name,
                     level = level,
                     exercises = exercisesList,
-                    imglink = image
                 )
             )
         }
 
         return workouts
+
+    }
+
+    suspend fun dbChargeHistorical() :  List<HistoricalWorkout>{
+        Log.i("UCM", "llega 2")
+
+        var historicalworkouts = mutableListOf<HistoricalWorkout>()
+        val usersSnapshot = FirebaseSingleton.db.collection("users").get().await()
+
+// 2. Iterar sobre cada documento (usuario)
+        for (userDocument in usersSnapshot.documents) {
+            val userId = userDocument.id
+            Log.i("UCM","Procesando usuario ID: $userId")
+
+            // 3. Obtener la subcolección de este documento de usuario
+            val subcollectionSnapshot = userDocument.reference
+                .collection("historicalWorkouts")
+                .get()
+                .await()
+            Log.i("UCM",subcollectionSnapshot.documents.size.toString())
+            for (subDoc in subcollectionSnapshot.documents) {
+
+                val name = subDoc.getString("workoutName") ?: ""
+                val level = subDoc.getString("level") ?: ""
+                val time = subDoc.getLong("time") ?: 0
+                val date = subDoc.getString("date") ?: ""
+
+                historicalworkouts.add(
+                    HistoricalWorkout(
+                        name = name,
+                        level = level,
+                        time = time,
+                        date = date
+                    )
+                )
+
+
+            }
+        }
+
+        return historicalworkouts
 
     }
 

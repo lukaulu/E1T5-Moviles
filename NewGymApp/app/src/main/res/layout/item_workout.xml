@@ -14,15 +14,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="top|center"
         android:layout_margin="8dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:orientation="horizontal"
+        android:gravity="center">
         <ImageView
             android:id="@+id/imgviewitem"
             android:layout_width="80dp"
             android:layout_height="80dp"
             >
         </ImageView>
+        <ImageView
+            android:id="@+id/imglevelitem"
+            android:layout_width="40dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            >
+        </ImageView>
+    </LinearLayout>
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"

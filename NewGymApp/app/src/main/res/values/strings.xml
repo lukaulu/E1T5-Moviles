@@ -20,5 +20,12 @@
     <string name="finishSignUp">Finish</string>
 
 
+    <string name="all">All</string>
+    <string name="beginner">Begginer</string>
+    <string name="middle">Middle</string>
+    <string name="advanced">Advanced</string>
+
+    <string name="your_stats">Your stats</string>
+
 
 </resources>

@@ -25,12 +25,14 @@
 
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/arrowfoward50"
-        android:backgroundTint="@color/HV"
-        app:layout_constraintStart_toEndOf="@+id/menuBar"
+        android:id="@+id/logoutbtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/backarrow50"
+        android:backgroundTint="@color/White"
+        app:layout_constraintStart_toStartOf="@+id/menuBar"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp"
 
         ></ImageButton>
 
@@ -44,10 +46,53 @@
         android:textColor="@color/White"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
 
         >
     </TextView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profilecv"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@+id/wellcometv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:cardCornerRadius="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:backgroundTint="@color/UnselectedField"
+
+
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/porfilepic"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:background="@drawable/heavyspace_bg"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+            ></ImageView>
+        <TextView
+            android:id="@+id/profiletv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/porfilepic"
+            android:text="****"
+            android:textSize="14dp"
+            android:textColor="@color/White"
+            ></TextView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/statsCV"
@@ -60,7 +105,155 @@
         android:layout_marginRight="20dp"
         android:backgroundTint="@color/UnselectedField"
 
-        ></androidx.cardview.widget.CardView>
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/yourstatstv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/your_stats"
+                android:textSize="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="10dp"
+                android:textColor="@color/White"
+                ></TextView>
+
+            <TextView
+                android:id="@+id/img1txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@id/img1"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/White"
+                android:layout_marginRight="135dp"
+                ></TextView>
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/levelbegginer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/img2"
+            android:layout_marginBottom="5dp"
+            ></ImageView>
+            <TextView
+                android:id="@+id/img2txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@id/img2"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/White"
+                android:layout_marginRight="85dp"
+                ></TextView>
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/levelmiddle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/img3"
+            android:layout_marginBottom="10dp"
+            > </ImageView>
+            <TextView
+                android:id="@+id/img3txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@id/img3"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/White"
+                android:layout_marginRight="35dp"
+                ></TextView>
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/leveladvanced"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            >
+"
+            ></ImageView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <RadioGroup
+        android:id="@+id/radioGroupLevels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/statsCV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:checkedButton="@id/allRB"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+
+
+
+        >
+        <RadioButton
+            android:id="@+id/allRB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all"
+            android:textColor="@color/White"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginRight="10dp"
+
+            ></RadioButton>
+        <RadioButton
+            android:id="@+id/begginerRB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/beginner"
+            android:textColor="@color/White"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+
+            ></RadioButton>
+        <RadioButton
+            android:id="@+id/middleRB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/middle"
+            android:textColor="@color/White"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginRight="15dp"
+
+            ></RadioButton>
+        <RadioButton
+            android:id="@+id/advancedRB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/advanced"
+            android:textColor="@color/White"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="10dp"
+
+
+            ></RadioButton>
+    </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWorkout"
@@ -71,10 +264,35 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
 
+        ></androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="120dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:backgroundTint="#00FFFFFF"
+        android:orientation="vertical"
+
         >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHistorical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/historicstyle"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
 
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
-    </androidx.recyclerview.widget.RecyclerView>
+            ></androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:id="@+id/menuBar"
