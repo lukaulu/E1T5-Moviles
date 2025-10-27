@@ -29,6 +29,7 @@
     <string name="actual_workouts">Wokouts count</string>
     <string name="create_workout">Create a Workout</string>
     <string name="level">Level</string>
+    <string name="linkworkout">URL</string>
 
 
 </resources>

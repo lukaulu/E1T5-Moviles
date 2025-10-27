@@ -58,6 +58,8 @@ class WorkoutViewHolder (view: View): RecyclerView.ViewHolder(view){
             // fallback
             ivLevel.setImageResource(android.R.drawable.ic_menu_report_image)
         }
+
+
     }
 
 }

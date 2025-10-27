@@ -3,6 +3,7 @@ package com.example.newgymapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -41,6 +42,10 @@ class TrainerHomeActivity : AppCompatActivity() {
     private lateinit var profiletv : TextView
     private lateinit var togglecreateworkout : ImageButton;
     private lateinit var createworkoutcard : CardView
+    private lateinit var addworkoutbtn : ImageButton;
+    private lateinit var nametoaddetv : EditText;
+    private lateinit var urltoadd : EditText;
+    private lateinit var leveltoaddRG : RadioGroup;
 
 
 
@@ -103,6 +108,49 @@ class TrainerHomeActivity : AppCompatActivity() {
 
 
         }
+        addworkoutbtn.setOnClickListener {
+            val nameToAdd = nametoaddetv.text.toString()
+            val urlToAdd = urltoadd.text.toString()
+            val levelToAdd = when (leveltoaddRG.checkedRadioButtonId){
+                R.id.newBegginerRB -> "Begginer"
+                R.id.newMiddleRB -> "Middle"
+                R.id.newAdvancedRB -> "Advanced"
+                else -> "Begginer"
+            }
+
+            Log.i("UCM", "Adding workout: $nameToAdd, $urlToAdd, $levelToAdd")
+
+            val newWorkout = Workout(
+                name = nameToAdd,
+                level = levelToAdd,
+                exercises = listOf() // Empty list of exercises for now
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                // Add the new workout to Firestore
+                FirebaseSingleton.db.collection("workouts").add(
+                    mapOf(
+                        "name" to newWorkout.name,
+                        "level" to newWorkout.level,
+                        "url" to urlToAdd,
+
+                    )
+                ).await()
+
+                // Refresh the workouts list
+                workouts = dbChargeWorkouts()
+
+                withContext(Dispatchers.Main) {
+                    val workoutorder = mapOf(
+                        "Begginer" to 1,
+                        "Middle" to 2,
+                        "Advanced" to 3
+                    )
+                    workoutAdapter.workouts = workouts.sortedBy { workoutorder[it.level] }
+                    workoutAdapter.notifyDataSetChanged()
+                }
+            }
+        }
     }
 
     private fun initComponents() {
@@ -123,10 +171,21 @@ class TrainerHomeActivity : AppCompatActivity() {
         logout = findViewById(R.id.logoutbtn)
         togglecreateworkout = findViewById(R.id.createWorkout)
         createworkoutcard = findViewById(R.id.createWorkoutCV)
+        addworkoutbtn = findViewById(R.id.addWorkoutBtn)
+        nametoaddetv = findViewById(R.id.newNameet)
+        urltoadd = findViewById(R.id.newUrlet)
+        leveltoaddRG = findViewById(R.id.levelRG)
 
     }
 
     private fun initUI() {
+        val workoutorder = mapOf(
+            "Begginer" to 1,
+            "Middle" to 2,
+            "Advanced" to 3
+        )
+
+
 
         workoutAdapter = WorkoutAdapter(workouts)
         rvWorkout.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -136,12 +195,13 @@ class TrainerHomeActivity : AppCompatActivity() {
             workouts = dbChargeWorkouts()
 
             withContext(Dispatchers.Main) {
-                workoutAdapter.workouts = workouts
+                workoutAdapter.workouts = workouts.sortedBy { workoutorder[it.level] }
+                Log.i("UCM", workouts.sortedBy { workoutorder[it.level] }.toString())
                 workoutAdapter.notifyDataSetChanged()
 
             }
         }
-        Log.i("UCM", "llega")
+
 
 
 
