@@ -2,15 +2,14 @@ package com.example.newgymapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.newgymapp.model.Exercise
 import com.example.newgymapp.model.User
-import com.example.newgymapp.model.Workout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,23 +18,40 @@ import kotlinx.coroutines.tasks.await
 private lateinit var btnSignUp : Button;
 private lateinit var btnLogin : Button;
 
+private val auth = FirebaseSingleton.auth
+
+
 class MainActivity : AppCompatActivity() {
 
 
     override fun onStart() {
         super.onStart()
-        val auth = FirebaseSingleton.auth
-        val currentUser = auth.currentUser
+        var currentUser = auth.currentUser
         if(currentUser != null){
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val trainer = isTrainer()
+                    if (trainer) {
+                        Log.i("MAIN_ACTIVITY", "User is a trainer")
+                        val intent = Intent(this@MainActivity, TrainerHomeActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        Log.i("MAIN_ACTIVITY", "User is not a trainer")
+                        val intent = Intent(this@MainActivity, ClientHomeActivity::class.java)
+                        startActivity(intent)
+                }
+            }
+
 
             val toast = Toast.makeText(
                 applicationContext,
                 "Wellcome back " + currentUser?.email + "!",
                 Toast.LENGTH_SHORT
             )
-            toast.show()}
+            toast.show()
+
+
+        }
 
     }
 
@@ -77,7 +93,26 @@ class MainActivity : AppCompatActivity() {
         btnLogin = findViewById<Button>(R.id.btnLogin);
     }
 
-/*
+
+    suspend fun isTrainer() : Boolean {
+        var currentUser = auth.currentUser
+        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        var user = User("", "", "", "", "", false)
+
+        for (userDoc in userSnapshot.documents) {
+            if (userDoc.getString("email") == currentUser?.email) {
+                if (userDoc.getBoolean("trainer") == true) {
+                    return true
+                } else {
+                    return false
+                }
+
+            }
+
+        }
+        return false
+    }
+        /*
     suspend fun dbCharge() {
 
 
@@ -139,4 +174,4 @@ class MainActivity : AppCompatActivity() {
  */
 
 
-}
+    }

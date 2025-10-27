@@ -16,15 +16,14 @@ data class User (
 
 
 ){
-    constructor(email: String,password: String, name: String,lastName: String, birthdate: String) : this
-        ( "", name, lastName, email, password, false, mutableListOf<Workout>(), birthdate
-
-        ) {
+    constructor(email: String,password: String, name: String,lastName: String, birthdate: String, trainer : Boolean) : this
+        ( "", name, lastName, email, password, trainer, mutableListOf<Workout>(), birthdate) {
             this.email = email
             this.password = password
             this.name = name
             this.lastName = lastName
             this.birthdate = birthdate
             this.workoutsList = mutableListOf<Workout>()
+            this.trainer = trainer
         }
 }

@@ -82,27 +82,6 @@
         android:inputType="textPassword">
 
     </EditText>
-    <TextView
-        android:id="@+id/remembermetv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/rememberme"
-        android:textColor="@color/White"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword"></TextView>
-
-    <CheckBox
-        android:id="@+id/remembermecheckbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/remembermetv"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword"
-        android:layout_marginTop="8dp"
-        ></CheckBox>
 
     <Button
         android:id="@+id/btnLogIn"

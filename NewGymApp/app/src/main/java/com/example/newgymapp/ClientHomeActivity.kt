@@ -17,6 +17,7 @@ import com.example.firebaseariketa.rvArtist.HistoricalAdapter
 import com.example.firebaseariketa.rvArtist.WorkoutAdapter
 import com.example.newgymapp.model.Exercise
 import com.example.newgymapp.model.HistoricalWorkout
+import com.example.newgymapp.model.User
 import com.example.newgymapp.model.Workout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,14 +25,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class HomeActivity : AppCompatActivity() {
+class ClientHomeActivity : AppCompatActivity() {
 
-    val db = FirebaseSingleton.db
-    var workouts :List<Workout> = emptyList()
-    var historical :List<HistoricalWorkout> = emptyList()
-
-
-private lateinit var workoutAdapter: WorkoutAdapter;
+    private val db = FirebaseSingleton.db
+    private var workouts :List<Workout> = emptyList()
+    private var historical :List<HistoricalWorkout> = emptyList()
+    private lateinit var workoutAdapter: WorkoutAdapter;
     private lateinit var historicalAdapter: HistoricalAdapter;
     private lateinit var rvWorkout:RecyclerView
     private lateinit var rvHistorical:RecyclerView
@@ -41,6 +40,8 @@ private lateinit var workoutAdapter: WorkoutAdapter;
     private lateinit var logout: ImageButton;
     private lateinit var filterRG : RadioGroup;
     private lateinit var profiletv : TextView
+    private lateinit var historicalButton : ImageButton;
+    private lateinit var historicalCard : CardView
 
 
 
@@ -48,7 +49,7 @@ private lateinit var workoutAdapter: WorkoutAdapter;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_home_client)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -93,6 +94,15 @@ private lateinit var workoutAdapter: WorkoutAdapter;
             workoutAdapter.notifyDataSetChanged()
             }
 
+        historicalButton.setOnClickListener {
+            historicalCard.visibility = if (historicalCard.visibility == CardView.VISIBLE) {
+                CardView.GONE
+            } else {
+                CardView.VISIBLE
+            }
+
+        }
+
 
     }
 
@@ -114,6 +124,10 @@ private lateinit var workoutAdapter: WorkoutAdapter;
         logout = findViewById(R.id.logoutbtn)
         rvHistorical = findViewById(R.id.rvHistorical)
 
+        historicalButton = findViewById(R.id.historicalWorkout)
+
+        historicalCard = findViewById(R.id.historicalCV)
+
     }
 
     private fun initUI() {
@@ -131,10 +145,10 @@ private lateinit var workoutAdapter: WorkoutAdapter;
 
             }
         }
-        Log.i("UCM", "llega")
+
 
         historicalAdapter = HistoricalAdapter(historical)
-        rvHistorical.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvHistorical.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvHistorical.adapter = historicalAdapter
 
         CoroutineScope(Dispatchers.IO).launch {

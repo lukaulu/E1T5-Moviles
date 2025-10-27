@@ -6,18 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newgymapp.R
 import com.example.newgymapp.model.HistoricalWorkout
-import com.example.newgymapp.model.Workout
 
-class HistoricalAdapter(var historical: List<HistoricalWorkout>):RecyclerView.Adapter<HistoricalViewHolder>()
-{
+class HistoricalAdapter(var historical: List<HistoricalWorkout>): RecyclerView.Adapter<HistoricalViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoricalViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_workout,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_historical, parent, false)
         return HistoricalViewHolder(view)
-        
     }
 
     override fun getItemCount(): Int {
-
         return historical.size
     }
 

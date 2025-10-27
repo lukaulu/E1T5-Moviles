@@ -27,7 +27,6 @@ private lateinit var signuplink: TextView
 
 private var db = FirebaseSingleton.db
 
-private lateinit var remembermeChekBox : CheckBox
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,47 +46,33 @@ class LoginActivity : AppCompatActivity() {
     private fun initListeners() {
         btnLogin.setOnClickListener {
             val auth = FirebaseSingleton.auth
-            val intent = Intent(this, HomeActivity::class.java)
+            var user = User("","","","", "", false)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                user = usersChargeDB()
+
+            }
 
             auth.signInWithEmailAndPassword(etEmail.text.toString() + "@gmail.com", etPassword.text.toString())
                 .addOnSuccessListener {
                     Log.i("UCM", "usuario logeado")
-                    if (remembermeChekBox.isChecked) {
-                        Log.i("UCM", "Remember me checked")
 
-
-                    } else {
-                        Log.i("UCM", "Remember me unchecked")
-                        val auth = FirebaseSingleton.auth
-                        auth.currentUser?.let {
-                            auth.signOut()
-                        }
-
-                    }
+                    val intent = Intent(this, if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java)
+                    Log.i("UCM" ,"${intent}" )
                     startActivity(intent)
                 }
                 .addOnFailureListener {
+                    val intent = Intent(this, if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java)
                     CoroutineScope(Dispatchers.IO).launch {
                         val login = usersLogDB()
                         withContext(Dispatchers.Main) {
                             if (login) {
-                                // Si existe en la BD, creamos el usuario en Firebase Auth y navegamos al Home
                                 auth.createUserWithEmailAndPassword(
                                     etEmail.text.toString() + "@gmail.com",
                                     etPassword.text.toString()
                                 ).addOnSuccessListener {
-                                    if (remembermeChekBox.isChecked) {
-                                        Log.i("UCM", "Remember me checked")
 
 
-                                    } else {
-                                        Log.i("UCM", "Remember me unchecked")
-                                        val auth = FirebaseSingleton.auth
-                                        auth.currentUser?.let {
-                                            auth.signOut()
-                                        }
-
-                                    }
                                     startActivity(intent)
                                 }.addOnFailureListener { ex ->
                                     Toast.makeText(
@@ -124,7 +109,6 @@ class LoginActivity : AppCompatActivity() {
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         signuplink = findViewById(R.id.signuplinktv)
-        remembermeChekBox = findViewById(R.id.remembermecheckbox)
     }
 
     suspend fun usersLogDB() : Boolean {
@@ -133,11 +117,37 @@ class LoginActivity : AppCompatActivity() {
         for (userDoc in userSnapshot.documents) {
             if (userDoc.getString("email") == etEmail.text.toString() + "@gmail.com" &&
                 userDoc.getString("password") == etPassword.text.toString()) {
+
                 Log.i("UCM", "login seteado a true")
+
                 return true
             }
         }
         Log.i("UCM", "login seteado a false")
         return false
+    }
+
+    suspend fun usersChargeDB() : User {
+        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        var user = User("","","","", "", false)
+
+        for (userDoc in userSnapshot.documents) {
+            if (userDoc.getString("email") == etEmail.text.toString() + "@gmail.com" &&
+                userDoc.getString("password") == etPassword.text.toString()) {
+                user = User(
+                    userDoc.getString("email") ?: "",
+                    userDoc.getString("password") ?: "",
+                    userDoc.getString("name") ?: "",
+                    userDoc.getString("lastName") ?: "",
+                 userDoc.getString("birthdate") ?: "",
+                    userDoc.getBoolean("trainer") ?: false
+                )
+            }
+
+
+
+        }
+        return user
+
     }
 }

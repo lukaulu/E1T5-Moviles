@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NewGymApp">
         <activity
-            android:name=".NewUser"
+            android:name=".TrainerHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".ClientHomeActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

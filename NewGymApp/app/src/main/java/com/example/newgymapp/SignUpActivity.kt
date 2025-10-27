@@ -1,7 +1,6 @@
 package com.example.newgymapp
 
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -59,6 +58,7 @@ class SignUpActivity : AppCompatActivity() {
                         name = etName.text.toString(),
                         lastName = etLastName.text.toString(),
                         birthdate = etBirthdate.text.toString(),
+                        trainer = false
 
                     )
                     if (switchbutton.isChecked){
@@ -75,7 +75,8 @@ class SignUpActivity : AppCompatActivity() {
                         }
 
                     Log.i("UCM", "usuario insertado")
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = Intent(this, if (newuser.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java)
+                    Log.i("UCM" ,"${intent}" )
                     startActivity(intent)
 
                 }.addOnFailureListener {
