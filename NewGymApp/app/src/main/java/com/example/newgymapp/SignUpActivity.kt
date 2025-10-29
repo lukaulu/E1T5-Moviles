@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.CalendarView
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +26,9 @@ private lateinit var switchbutton: Switch;
 private lateinit var etName: EditText;
 private lateinit var etLastName: EditText;
 private lateinit var etBirthdate: EditText;
+private lateinit var calendarbtn: ImageButton;
+private lateinit var calendarcard: androidx.cardview.widget.CardView;
+private lateinit var calendar: CalendarView;
 
 
 private var db = FirebaseSingleton.db
@@ -96,6 +101,21 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        calendarbtn.setOnClickListener {
+            calendarcard.visibility = if (calendarcard.visibility == androidx.cardview.widget.CardView.VISIBLE) {
+                androidx.cardview.widget.CardView.GONE
+            } else {
+                androidx.cardview.widget.CardView.VISIBLE
+            }
+        }
+
+        calendar.setOnDateChangeListener {
+            _, year, month, dayOfMonth ->
+            val selectedDate = "${dayOfMonth}/${month + 1}/$year"
+            etBirthdate.setText(selectedDate)
+            calendarcard.visibility = androidx.cardview.widget.CardView.GONE
+        }
+
 
 
     }
@@ -109,6 +129,9 @@ class SignUpActivity : AppCompatActivity() {
         etName= findViewById(R.id.etNewName)
         etLastName= findViewById(R.id.etNewLastName)
         etBirthdate = findViewById(R.id.etNewBirthdate)
+        calendarbtn = findViewById(R.id.calendarbtn)
+        calendarcard = findViewById(R.id.calendarcard)
+        calendar = findViewById(R.id.calendar)
 
     }
 }

@@ -13,6 +13,7 @@
     <string name="client">Client</string>
     <string name="trainer">Trainer</string>
     <string name="haveAnAccount">You already have an account?</string>
+    <string name="birthhint">DD/MM/YYYY</string>
 
     <string name="newUserName">Name</string>
     <string name="newUserLastName">Last Name</string>
