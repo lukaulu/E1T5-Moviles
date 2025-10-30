@@ -46,7 +46,8 @@ class TrainerHomeActivity : AppCompatActivity() {
     private lateinit var nametoaddetv : EditText;
     private lateinit var urltoadd : EditText;
     private lateinit var leveltoaddRG : RadioGroup;
-
+    private lateinit var  profilechangercv : CardView;
+    private lateinit var profilebtn : ImageButton;
 
 
 
@@ -77,19 +78,23 @@ class TrainerHomeActivity : AppCompatActivity() {
         }
 
         filterRG.setOnCheckedChangeListener { group, checkedId ->
-            var filteredWorkouts: List<Workout> = when (checkedId){
+            var filteredWorkouts: List<Workout> = when (checkedId) {
                 R.id.begginerRB -> {
                     workouts.filter { it.level.equals("Begginer", ignoreCase = true) }
                 }
+
                 R.id.middleRB -> {
                     workouts.filter { it.level.equals("Middle", ignoreCase = true) }
                 }
+
                 R.id.advancedRB -> {
                     workouts.filter { it.level.equals("Advanced", ignoreCase = true) }
                 }
+
                 R.id.allRB -> {
                     workouts
                 }
+
                 else -> {
                     workouts
                 }
@@ -97,15 +102,15 @@ class TrainerHomeActivity : AppCompatActivity() {
 
             workoutAdapter.workouts = filteredWorkouts
             workoutAdapter.notifyDataSetChanged()
-            }
+        }
 
         togglecreateworkout.setOnClickListener {
-            createworkoutcard.visibility = if (createworkoutcard.visibility == CardView.VISIBLE) {
-                CardView.GONE
+            if (createworkoutcard.visibility == CardView.VISIBLE) {
+                createworkoutcard.visibility = CardView.GONE
             } else {
-                CardView.VISIBLE
+                profilechangercv.visibility = CardView.GONE
+                createworkoutcard.visibility = CardView.VISIBLE
             }
-
 
         }
         addworkoutbtn.setOnClickListener {
@@ -151,6 +156,22 @@ class TrainerHomeActivity : AppCompatActivity() {
                 }
             }
         }
+
+
+
+        profilebtn.setOnClickListener {
+            if (profilechangercv.visibility == CardView.VISIBLE) {
+                profilechangercv.visibility = CardView.GONE
+            } else {
+                profilechangercv.visibility = CardView.VISIBLE
+                createworkoutcard.visibility = CardView.GONE
+            }
+        }
+
+
+
+
+
     }
 
     private fun initComponents() {
@@ -167,6 +188,7 @@ class TrainerHomeActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         wellcometv.text = "Hello " + currentUser?.email?.substringBefore("@") + "!"
         profiletv.text = currentUser?.email?.substringBefore("@")
+
         rvWorkout = findViewById(R.id.rvWorkout)
         logout = findViewById(R.id.logoutbtn)
         togglecreateworkout = findViewById(R.id.createWorkout)
@@ -175,6 +197,8 @@ class TrainerHomeActivity : AppCompatActivity() {
         nametoaddetv = findViewById(R.id.newNameet)
         urltoadd = findViewById(R.id.newUrlet)
         leveltoaddRG = findViewById(R.id.levelRG)
+        profilechangercv = findViewById(R.id.profilechangercv)
+        profilebtn = findViewById(R.id.profilebtn)
 
     }
 
@@ -247,48 +271,6 @@ class TrainerHomeActivity : AppCompatActivity() {
         return workouts
 
     }
-
-    suspend fun dbChargeHistorical() :  List<HistoricalWorkout>{
-        Log.i("UCM", "llega 2")
-
-        var historicalworkouts = mutableListOf<HistoricalWorkout>()
-        val usersSnapshot = FirebaseSingleton.db.collection("users").get().await()
-
-// 2. Iterar sobre cada documento (usuario)
-        for (userDocument in usersSnapshot.documents) {
-            val userId = userDocument.id
-            Log.i("UCM","Procesando usuario ID: $userId")
-
-            // 3. Obtener la subcolección de este documento de usuario
-            val subcollectionSnapshot = userDocument.reference
-                .collection("historicalWorkouts")
-                .get()
-                .await()
-            Log.i("UCM",subcollectionSnapshot.documents.size.toString())
-            for (subDoc in subcollectionSnapshot.documents) {
-
-                val name = subDoc.getString("workoutName") ?: ""
-                val level = subDoc.getString("level") ?: ""
-                val time = subDoc.getLong("time") ?: 0
-                val date = subDoc.getString("date") ?: ""
-
-                historicalworkouts.add(
-                    HistoricalWorkout(
-                        name = name,
-                        level = level,
-                        time = time,
-                        date = date
-                    )
-                )
-
-
-            }
-        }
-
-        return historicalworkouts
-
-    }
-
 
 
 }

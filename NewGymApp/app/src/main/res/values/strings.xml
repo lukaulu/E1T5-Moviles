@@ -32,5 +32,9 @@
     <string name="level">Level</string>
     <string name="linkworkout">URL</string>
 
+    <string name="profilepreview">Your Profile Preview</string>
+
+    <string name="apply">Apply</string>
+
 
 </resources>

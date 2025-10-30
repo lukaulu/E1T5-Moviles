@@ -1,10 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-
-
+    id("kotlin-kapt")
     alias(libs.plugins.googleService)
     alias(libs.plugins.crashlytics)
+
 }
 
 android {
@@ -46,7 +46,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
 
-
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
 
 
     implementation(libs.androidx.core.ktx)

@@ -3,7 +3,10 @@ package com.example.newgymapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaseariketa.rvArtist.HistoricalAdapter
@@ -24,6 +28,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import com.bumptech.glide.Glide
+import kotlin.coroutines.coroutineContext
+
 
 class ClientHomeActivity : AppCompatActivity() {
 
@@ -43,6 +50,21 @@ class ClientHomeActivity : AppCompatActivity() {
     private lateinit var historicalButton : ImageButton;
     private lateinit var historicalCard : CardView
 
+    private lateinit var  profilechangercv : CardView;
+    private lateinit var profilebtn : ImageButton;
+    // profile comps
+    private lateinit var profilepic : ImageView;
+    private lateinit var profilepiceditor : ImageView
+
+    private lateinit var profilename : EditText;
+    private lateinit var profilelastname : EditText;
+    private lateinit var profileemail : EditText;
+    private lateinit var profilebirthday : EditText;
+    private lateinit var profileurl : EditText;
+    private lateinit var verifyimagebtn : ImageButton;
+
+
+    private lateinit var applybtn : Button;
 
 
 
@@ -95,13 +117,57 @@ class ClientHomeActivity : AppCompatActivity() {
             }
 
         historicalButton.setOnClickListener {
-            historicalCard.visibility = if (historicalCard.visibility == CardView.VISIBLE) {
-                CardView.GONE
-            } else {
-                CardView.VISIBLE
-            }
+            if (historicalCard.visibility == CardView.VISIBLE) {
+                historicalCard.visibility = CardView.GONE
+        } else {
+            historicalCard.visibility = CardView.VISIBLE
+            profilechangercv.visibility = CardView.GONE
+        }
 
         }
+
+        profilebtn.setOnClickListener {
+            if (profilechangercv.visibility == CardView.VISIBLE) {
+                profilechangercv.visibility = CardView.GONE
+            } else {
+                profilechangercv.visibility = CardView.VISIBLE
+                historicalCard.visibility = CardView.GONE
+            }
+        }
+
+        applybtn.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                dbUpdateUser()
+            }
+
+            val imageUrl = profileurl.text.toString()
+            if (imageUrl.isNotBlank()) {
+            Glide.with(this)
+                .load(imageUrl)
+                .into(profilepic)
+            }
+            wellcometv.text = "Hello " + profilename.text.toString().ifEmpty {
+                auth.currentUser?.email?.substringBefore("@") } + "!"
+            
+            profiletv.text = profilename.text.toString().ifEmpty {
+                auth.currentUser?.email?.substringBefore("@") }
+
+
+
+        }
+
+        verifyimagebtn.setOnClickListener {
+            val imageUrl = profileurl.text.toString()
+            if (imageUrl.isNotBlank()) {
+            Glide.with(this)
+                .load(imageUrl)
+                .into(profilepiceditor)
+
+        }else{
+                profilepiceditor.setImageResource(R.drawable.heavyspace_bg)
+            }
+        }
+
 
 
     }
@@ -109,24 +175,30 @@ class ClientHomeActivity : AppCompatActivity() {
     private fun initComponents() {
         filterRG = findViewById(R.id.radioGroupLevels)
         filterRG.check(R.id.allRB)
-
         itemCard = findViewById(R.id.itemViewContainer)
         wellcometv = findViewById(R.id.wellcometv)
-
         profiletv = findViewById(R.id.profiletv)
-
-
-
         val currentUser = auth.currentUser
         wellcometv.text = "Hello " + currentUser?.email?.substringBefore("@") + "!"
         profiletv.text = currentUser?.email?.substringBefore("@")
+
         rvWorkout = findViewById(R.id.rvWorkout)
         logout = findViewById(R.id.logoutbtn)
         rvHistorical = findViewById(R.id.rvHistorical)
-
         historicalButton = findViewById(R.id.historicalWorkout)
-
         historicalCard = findViewById(R.id.historicalCV)
+        profilechangercv = findViewById(R.id.profilechangercv)
+        profilebtn = findViewById(R.id.profilebtn)
+
+        profilepiceditor = findViewById(R.id.profileImage)
+        profilename = findViewById(R.id.profileNameet)
+        profilelastname = findViewById(R.id.profileLastNameet)
+        profileemail = findViewById(R.id.profileEmailet)
+        profilebirthday = findViewById(R.id.profileBirthet)
+        profileurl = findViewById(R.id.profileUrlet)
+        profilepic = findViewById(R.id.porfilepic)
+        applybtn = findViewById(R.id.applybtn)
+        verifyimagebtn = findViewById(R.id.verifyimagebtn)
 
     }
 
@@ -146,6 +218,29 @@ class ClientHomeActivity : AppCompatActivity() {
             }
         }
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            val pfpurl = dbPFP()
+            withContext(Dispatchers.Main) {
+                Log.i("UCM", "PFP URL: $pfpurl")
+                if (pfpurl.isNotBlank()) {
+                    Glide.with(this@ClientHomeActivity)
+                        .load(pfpurl)
+                        .into(profilepiceditor)
+
+                    Glide.with(this@ClientHomeActivity)
+                        .load(pfpurl)
+                        .into(profilepic)
+
+                } else {
+                    profilepic.setImageResource(R.drawable.heavyspace_bg)
+                    profilepiceditor.setImageResource(R.drawable.heavyspace_bg)}
+            }
+        }
+
+
+
+
+
 
         historicalAdapter = HistoricalAdapter(historical)
         rvHistorical.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -160,6 +255,8 @@ class ClientHomeActivity : AppCompatActivity() {
 
             }
         }
+
+
 
     }
 
@@ -243,6 +340,49 @@ class ClientHomeActivity : AppCompatActivity() {
 
         return historicalworkouts
 
+    }
+
+    suspend fun dbUpdateUser(){
+        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        var user = User("","","","", "", false)
+
+        for (userDoc in userSnapshot.documents) {
+            if (userDoc.getString("email") ==  auth.currentUser?.email.toString()) {
+                user = User(
+                    userDoc.getString("email") ?: "",
+                    userDoc.getString("password") ?: "",
+                    profilename.text.toString().trim().ifEmpty { userDoc.getString("name") ?: ""},
+                    profilelastname.text.toString().trim().ifEmpty {   userDoc.getString("lastName") ?: ""},
+                    profilebirthday.text.toString().trim().ifEmpty {  userDoc.getString("birthdate") ?: ""},
+                    userDoc.getBoolean("trainer") ?: false,
+                    profileurl.text.toString().trim().ifEmpty { userDoc.getString("profilepicurl") ?: ""}
+                )
+
+                db.collection("users").document(userDoc.id).set(user)
+            }
+
+
+
+        }
+    }
+
+    suspend fun dbPFP() : String{
+        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        var user = User("","","","", "", false)
+
+        for (userDoc in userSnapshot.documents) {
+            if (userDoc.getString("email") ==  auth.currentUser?.email.toString()) {
+
+
+                Log.i("UCM", "PFP URL found " + userDoc.getString("profilepicurl"))
+
+                val url = userDoc.getString("profilepicurl") ?: ""
+                return url
+
+            }
+
+        }
+        return ""
     }
 
 
