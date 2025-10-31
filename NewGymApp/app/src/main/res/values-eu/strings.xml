@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NewGymApp</string>
+    <string name="signUp">Erregistratu</string>
+    <string name="logIn">Logeatu</string>
+    <string name="notAnAccount">Ez dituzu kontu bat?</string>
+    <string name="email">email</string>
+    <string name="password">Pasahitza</string>
+    <string name="whatAreYou">Zer zara?</string>
+    <string name="client">Bezero</string>
+    <string name="trainer">Entrenatzaile</string>
+    <string name="haveAnAccount">Baduzu konturik?</string>
+    <string name="newUserName">Izena</string>
+    <string name="newUserLastName">Abizena</string>
+    <string name="newBirthdate">Jaiotze data</string>
+    <string name="finishSignUp">Amaitu</string>
+    <string name="all">Guztiak</string>
+    <string name="beginner">Berria</string>
+    <string name="middle">Erdi</string>
+    <string name="advanced">Aurreratua</string>
+    <string name="your_stats">Zure eguneroko ariketak</string>
+    <string name="actual_workouts">Entrenamenduak</string>
+    <string name="create_workout">Sortu entrenamendu bat</string>
+    <string name="level">Maila</string>
+    <string name="linkworkout">URL-a</string>
+    <string name="profilepreview">Zure profilaren aurrebista</string>
+    <string name="apply">Aplikatu</string>
+</resources>

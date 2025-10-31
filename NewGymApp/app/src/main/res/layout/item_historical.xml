@@ -23,31 +23,43 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:text="aaaaaaa"
-            ></TextView>
+            />
+
         <TextView
             android:id="@+id/historicalLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/historicalName"
-            app:layout_constraintEnd_toStartOf="@id/historicalTime"
+            app:layout_constraintEnd_toStartOf="@id/historicalPercentage"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="10dp"
             android:text="aaaaaaa"
 
-            ></TextView>
+            />
+        <TextView
+            android:id="@+id/historicalPercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/historicalLevel"
+            app:layout_constraintEnd_toStartOf="@id/historicalTime"
+
+            android:layout_marginTop="10dp"
+            android:text="aaaaaaa"
+            />
         <TextView
             android:id="@+id/historicalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/historicalLevel"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/historicalPercentage"
             app:layout_constraintEnd_toStartOf="@id/historicalDate"
             android:layout_marginTop="10dp"
             android:text="aaaaaaa"
-            ></TextView>
+            />
         <TextView
             android:id="@+id/historicalDate"
             android:layout_width="wrap_content"
@@ -57,7 +69,8 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:text="aaaaaaa"
-            ></TextView>
+            />
+
 
 
 

@@ -18,13 +18,17 @@ class HistoricalViewHolder (view: View): RecyclerView.ViewHolder(view){
     private val tvhistoricalTime:TextView = view.findViewById(R.id.historicalTime)
     private val tvhistoricalDate:TextView = view.findViewById(R.id.historicalDate)
 
+    private val tvhistoricalpercentage:TextView = view.findViewById(R.id.historicalPercentage)
+
 
     fun render(historical : HistoricalWorkout){
         Log.i("HISTORICAL_WORKOUT", historical.toString())
         tvhistoricalName.text = historical.name
         tvhistoricalLevel.text = historical.level
-        tvhistoricalTime.text = "${historical.time} seconds"
+        tvhistoricalTime.text = "${historical.time}secs"
         tvhistoricalDate.text = historical.date
+        tvhistoricalpercentage.text = "${historical.percentage}%"
+
 
 
 

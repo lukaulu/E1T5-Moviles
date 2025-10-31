@@ -29,42 +29,47 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import com.bumptech.glide.Glide
-import kotlin.coroutines.coroutineContext
 
 
 class ClientHomeActivity : AppCompatActivity() {
 
     private val db = FirebaseSingleton.db
-    private var workouts :List<Workout> = emptyList()
-    private var historical :List<HistoricalWorkout> = emptyList()
+    private var workouts: List<Workout> = emptyList()
+    private var historical: List<HistoricalWorkout> = emptyList()
     private lateinit var workoutAdapter: WorkoutAdapter;
     private lateinit var historicalAdapter: HistoricalAdapter;
-    private lateinit var rvWorkout:RecyclerView
-    private lateinit var rvHistorical:RecyclerView
-    private lateinit var wellcometv : TextView;
+    private lateinit var rvWorkout: RecyclerView
+    private lateinit var rvHistorical: RecyclerView
+    private lateinit var wellcometv: TextView;
     private val auth = FirebaseSingleton.auth;
-    private lateinit var itemCard : CardView;
+    private lateinit var itemCard: CardView;
     private lateinit var logout: ImageButton;
-    private lateinit var filterRG : RadioGroup;
-    private lateinit var profiletv : TextView
-    private lateinit var historicalButton : ImageButton;
-    private lateinit var historicalCard : CardView
-
-    private lateinit var  profilechangercv : CardView;
-    private lateinit var profilebtn : ImageButton;
+    private lateinit var filterRG: RadioGroup;
+    private lateinit var profiletv: TextView
+    private lateinit var historicalButton: ImageButton;
+    private lateinit var historicalCard: CardView
     // profile comps
-    private lateinit var profilepic : ImageView;
-    private lateinit var profilepiceditor : ImageView
-
-    private lateinit var profilename : EditText;
-    private lateinit var profilelastname : EditText;
-    private lateinit var profileemail : EditText;
-    private lateinit var profilebirthday : EditText;
-    private lateinit var profileurl : EditText;
-    private lateinit var verifyimagebtn : ImageButton;
+    private lateinit var profilechangercv: CardView;
+    private lateinit var profilebtn: ImageButton;
 
 
-    private lateinit var applybtn : Button;
+    private lateinit var profilepic: ImageView;
+    private lateinit var profilepiceditor: ImageView
+
+    private lateinit var profilename: EditText;
+    private lateinit var profilelastname: EditText;
+    private lateinit var profileemail: EditText;
+    private lateinit var profilebirthday: EditText;
+    private lateinit var profileurl: EditText;
+    private lateinit var verifyimagebtn: ImageButton;
+    private lateinit var applybtn: Button;
+
+    private lateinit var settingsbtn: ImageView
+    private lateinit var languagebtn: ImageView
+    private lateinit var themebtn: ImageView
+    private lateinit var settingscv: CardView
+
+
 
 
 
@@ -94,19 +99,23 @@ class ClientHomeActivity : AppCompatActivity() {
         }
 
         filterRG.setOnCheckedChangeListener { group, checkedId ->
-            var filteredWorkouts: List<Workout> = when (checkedId){
-                R.id.begginerRB -> {
-                    workouts.filter { it.level.equals("Begginer", ignoreCase = true) }
+            var filteredWorkouts: List<Workout> = when (checkedId) {
+                R.id.beginnerRB -> {
+                    workouts.filter { it.level.equals("Beginner", ignoreCase = true) }
                 }
+
                 R.id.middleRB -> {
                     workouts.filter { it.level.equals("Middle", ignoreCase = true) }
                 }
+
                 R.id.advancedRB -> {
                     workouts.filter { it.level.equals("Advanced", ignoreCase = true) }
                 }
+
                 R.id.allRB -> {
                     workouts
                 }
+
                 else -> {
                     workouts
                 }
@@ -114,15 +123,15 @@ class ClientHomeActivity : AppCompatActivity() {
 
             workoutAdapter.workouts = filteredWorkouts
             workoutAdapter.notifyDataSetChanged()
-            }
+        }
 
         historicalButton.setOnClickListener {
             if (historicalCard.visibility == CardView.VISIBLE) {
                 historicalCard.visibility = CardView.GONE
-        } else {
-            historicalCard.visibility = CardView.VISIBLE
-            profilechangercv.visibility = CardView.GONE
-        }
+            } else {
+                historicalCard.visibility = CardView.VISIBLE
+                profilechangercv.visibility = CardView.GONE
+            }
 
         }
 
@@ -142,16 +151,17 @@ class ClientHomeActivity : AppCompatActivity() {
 
             val imageUrl = profileurl.text.toString()
             if (imageUrl.isNotBlank()) {
-            Glide.with(this)
-                .load(imageUrl)
-                .into(profilepic)
+                Glide.with(this)
+                    .load(imageUrl)
+                    .into(profilepic)
             }
             wellcometv.text = "Hello " + profilename.text.toString().ifEmpty {
-                auth.currentUser?.email?.substringBefore("@") } + "!"
-            
-            profiletv.text = profilename.text.toString().ifEmpty {
-                auth.currentUser?.email?.substringBefore("@") }
+                auth.currentUser?.email?.substringBefore("@")
+            } + "!"
 
+            profiletv.text = profilename.text.toString().ifEmpty {
+                auth.currentUser?.email?.substringBefore("@")
+            }
 
 
         }
@@ -159,15 +169,24 @@ class ClientHomeActivity : AppCompatActivity() {
         verifyimagebtn.setOnClickListener {
             val imageUrl = profileurl.text.toString()
             if (imageUrl.isNotBlank()) {
-            Glide.with(this)
-                .load(imageUrl)
-                .into(profilepiceditor)
+                Glide.with(this)
+                    .load(imageUrl)
+                    .into(profilepiceditor)
 
-        }else{
+            } else {
                 profilepiceditor.setImageResource(R.drawable.heavyspace_bg)
             }
         }
 
+        settingsbtn.setOnClickListener {
+            if (themebtn.visibility == ImageButton.VISIBLE) {
+                themebtn.visibility = ImageButton.GONE
+                languagebtn.visibility = ImageButton.GONE
+            } else {
+                themebtn.visibility = ImageButton.VISIBLE
+                languagebtn.visibility = ImageButton.VISIBLE
+            }
+        }
 
 
     }
@@ -175,7 +194,6 @@ class ClientHomeActivity : AppCompatActivity() {
     private fun initComponents() {
         filterRG = findViewById(R.id.radioGroupLevels)
         filterRG.check(R.id.allRB)
-        itemCard = findViewById(R.id.itemViewContainer)
         wellcometv = findViewById(R.id.wellcometv)
         profiletv = findViewById(R.id.profiletv)
         val currentUser = auth.currentUser
@@ -200,10 +218,21 @@ class ClientHomeActivity : AppCompatActivity() {
         applybtn = findViewById(R.id.applybtn)
         verifyimagebtn = findViewById(R.id.verifyimagebtn)
 
+        settingsbtn = findViewById(R.id.settingsbtn)
+        languagebtn = findViewById(R.id.languagebtn)
+        themebtn = findViewById(R.id.themebtn)
+        settingscv = findViewById(R.id.settingscv)
+
+
+
     }
 
     private fun initUI() {
-
+        val workoutorder = mapOf(
+            "Beginner" to 1,
+            "Middle" to 2,
+            "Advanced" to 3
+        )
         workoutAdapter = WorkoutAdapter(workouts)
         rvWorkout.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvWorkout.adapter = workoutAdapter
@@ -212,7 +241,7 @@ class ClientHomeActivity : AppCompatActivity() {
             workouts = dbChargeWorkouts()
 
             withContext(Dispatchers.Main) {
-                workoutAdapter.workouts = workouts
+                workoutAdapter.workouts = workouts.sortedBy { workoutorder[it.level] }
                 workoutAdapter.notifyDataSetChanged()
 
             }
@@ -233,7 +262,8 @@ class ClientHomeActivity : AppCompatActivity() {
 
                 } else {
                     profilepic.setImageResource(R.drawable.heavyspace_bg)
-                    profilepiceditor.setImageResource(R.drawable.heavyspace_bg)}
+                    profilepiceditor.setImageResource(R.drawable.heavyspace_bg)
+                }
             }
         }
 
@@ -257,15 +287,10 @@ class ClientHomeActivity : AppCompatActivity() {
         }
 
 
-
     }
 
 
-
-
-
-
-    suspend fun dbChargeWorkouts() :  List<Workout>{
+    suspend fun dbChargeWorkouts(): List<Workout> {
 
         var workouts = mutableListOf<Workout>()
         val workoutSnapshot = FirebaseSingleton.db.collection("workouts").get().await()
@@ -301,7 +326,7 @@ class ClientHomeActivity : AppCompatActivity() {
 
     }
 
-    suspend fun dbChargeHistorical() :  List<HistoricalWorkout>{
+    suspend fun dbChargeHistorical(): List<HistoricalWorkout> {
         Log.i("UCM", "llega 2")
 
         var historicalworkouts = mutableListOf<HistoricalWorkout>()
@@ -310,27 +335,29 @@ class ClientHomeActivity : AppCompatActivity() {
 // 2. Iterar sobre cada documento (usuario)
         for (userDocument in usersSnapshot.documents) {
             val userId = userDocument.id
-            Log.i("UCM","Procesando usuario ID: $userId")
+            Log.i("UCM", "Procesando usuario ID: $userId")
 
             // 3. Obtener la subcolección de este documento de usuario
             val subcollectionSnapshot = userDocument.reference
                 .collection("historicalWorkouts")
                 .get()
                 .await()
-            Log.i("UCM",subcollectionSnapshot.documents.size.toString())
+            Log.i("UCM", subcollectionSnapshot.documents.size.toString())
             for (subDoc in subcollectionSnapshot.documents) {
 
                 val name = subDoc.getString("workoutName") ?: ""
                 val level = subDoc.getString("level") ?: ""
                 val time = subDoc.getLong("time") ?: 0
                 val date = subDoc.getString("date") ?: ""
+                val percentage = subDoc.getLong("percentage") ?: 0
 
                 historicalworkouts.add(
                     HistoricalWorkout(
                         name = name,
                         level = level,
                         time = time,
-                        date = date
+                        date = date,
+                        percentage = percentage
                     )
                 )
 
@@ -342,36 +369,38 @@ class ClientHomeActivity : AppCompatActivity() {
 
     }
 
-    suspend fun dbUpdateUser(){
+    suspend fun dbUpdateUser() {
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
-        var user = User("","","","", "", false)
+        var user = User("", "", "", "", "", false)
 
         for (userDoc in userSnapshot.documents) {
-            if (userDoc.getString("email") ==  auth.currentUser?.email.toString()) {
+            if (userDoc.getString("email") == auth.currentUser?.email.toString()) {
                 user = User(
                     userDoc.getString("email") ?: "",
                     userDoc.getString("password") ?: "",
-                    profilename.text.toString().trim().ifEmpty { userDoc.getString("name") ?: ""},
-                    profilelastname.text.toString().trim().ifEmpty {   userDoc.getString("lastName") ?: ""},
-                    profilebirthday.text.toString().trim().ifEmpty {  userDoc.getString("birthdate") ?: ""},
+                    profilename.text.toString().trim().ifEmpty { userDoc.getString("name") ?: "" },
+                    profilelastname.text.toString().trim()
+                        .ifEmpty { userDoc.getString("lastName") ?: "" },
+                    profilebirthday.text.toString().trim()
+                        .ifEmpty { userDoc.getString("birthdate") ?: "" },
                     userDoc.getBoolean("trainer") ?: false,
-                    profileurl.text.toString().trim().ifEmpty { userDoc.getString("profilepicurl") ?: ""}
+                    profileurl.text.toString().trim()
+                        .ifEmpty { userDoc.getString("profilepicurl") ?: "" }
                 )
 
                 db.collection("users").document(userDoc.id).set(user)
             }
 
 
-
         }
     }
 
-    suspend fun dbPFP() : String{
+    suspend fun dbPFP(): String {
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
-        var user = User("","","","", "", false)
+        var user = User("", "", "", "", "", false)
 
         for (userDoc in userSnapshot.documents) {
-            if (userDoc.getString("email") ==  auth.currentUser?.email.toString()) {
+            if (userDoc.getString("email") == auth.currentUser?.email.toString()) {
 
 
                 Log.i("UCM", "PFP URL found " + userDoc.getString("profilepicurl"))
@@ -384,7 +413,6 @@ class ClientHomeActivity : AppCompatActivity() {
         }
         return ""
     }
-
 
 
 }

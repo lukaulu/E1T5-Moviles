@@ -52,46 +52,63 @@ class LoginActivity : AppCompatActivity() {
                 user = usersChargeDB()
 
             }
+            if (etEmail.text.toString().isEmpty() || etPassword.text.toString().isEmpty()) {
+                Toast.makeText(
+                    applicationContext,
+                    "Please fill in all fields",
+                    Toast.LENGTH_SHORT
+                ).show()
 
-            auth.signInWithEmailAndPassword(etEmail.text.toString() + "@gmail.com", etPassword.text.toString())
-                .addOnSuccessListener {
-                    Log.i("UCM", "usuario logeado")
+            }else {
+                auth.signInWithEmailAndPassword(
+                    etEmail.text.toString() + "@gmail.com",
+                    etPassword.text.toString()
+                )
+                    .addOnSuccessListener {
+                        Log.i("UCM", "usuario logeado")
 
-                    val intent = Intent(this, if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java)
-                    Log.i("UCM" ,"${intent}" )
-                    startActivity(intent)
-                }
-                .addOnFailureListener {
-                    val intent = Intent(this, if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val login = usersLogDB()
-                        withContext(Dispatchers.Main) {
-                            if (login) {
-                                auth.createUserWithEmailAndPassword(
-                                    etEmail.text.toString() + "@gmail.com",
-                                    etPassword.text.toString()
-                                ).addOnSuccessListener {
+                        val intent = Intent(
+                            this,
+                            if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
+                        )
+                        Log.i("UCM", "${intent}")
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener {
+                        val intent = Intent(
+                            this,
+                            if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
+                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val login = usersLogDB()
+                            withContext(Dispatchers.Main) {
+                                if (login) {
+                                    auth.createUserWithEmailAndPassword(
+                                        etEmail.text.toString() + "@gmail.com",
+                                        etPassword.text.toString()
+                                    ).addOnSuccessListener {
 
 
-                                    startActivity(intent)
-                                }.addOnFailureListener { ex ->
+                                        startActivity(intent)
+                                    }.addOnFailureListener { ex ->
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Error creating user: ${ex.message}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                } else {
+                                    Log.i("UCM", "Error login")
                                     Toast.makeText(
                                         applicationContext,
-                                        "Error creating user: ${ex.message}",
+                                        "The user and password are wrong",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                            } else {
-                                Log.i("UCM", "Error login")
-                                Toast.makeText(
-                                    applicationContext,
-                                    "The user and password are wrong",
-                                    Toast.LENGTH_SHORT
-                                ).show()
                             }
                         }
                     }
-                }
+            }
         }
 
         // Listener separado para el link de signup

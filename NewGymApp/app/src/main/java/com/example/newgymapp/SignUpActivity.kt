@@ -50,7 +50,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
 
-    private fun initListener(){
+    private fun initListener() {
         btnSignUp.setOnClickListener {
             val auth = Firebase.auth
             auth.createUserWithEmailAndPassword(etUser.text.toString(), etPassword.text.toString())
@@ -66,33 +66,61 @@ class SignUpActivity : AppCompatActivity() {
                         trainer = false
 
                     )
-                    if (switchbutton.isChecked){
+                    if (switchbutton.isChecked) {
                         newuser.trainer = true
-                    }else{
+                    } else {
                         newuser.trainer = false
                     }
 
                     db.collection("users").add(newuser)
                         .addOnSuccessListener {
-                            Log.i("UCM","usuario insertado en la bd con exito")
+                            Log.i("UCM", "usuario insertado en la bd con exito")
                         }.addOnFailureListener {
-                            Log.i("UCM","error al insertar usuario en la bd")
+                            Log.i("UCM", "error al insertar usuario en la bd")
                         }
 
                     Log.i("UCM", "usuario insertado")
-                    val intent = Intent(this, if (newuser.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java)
-                    Log.i("UCM" ,"${intent}" )
+                    val intent = Intent(
+                        this,
+                        if (newuser.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
+                    )
+                    Log.i("UCM", "${intent}")
                     startActivity(intent)
 
                 }.addOnFailureListener {
                     Log.i("UCM", "error de insercion de usuario")
+
+                    if (etUser.text.toString().isEmpty() || etPassword.text.toString()
+                            .isEmpty() || etName.text.toString()
+                            .isEmpty() || etLastName.text.toString()
+                            .isEmpty() || etBirthdate.text.toString().isEmpty()
+                    ) {
+                        val toast = Toast.makeText(
+                            applicationContext,
+                            "Please fill in all fields",
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+
+                    }else if (
+                        etPassword.text.toString().length < 6
+                    ){
+                        val toast = Toast.makeText(
+                            applicationContext,
+                            "Password must be at least 6 characters",
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+
+                    }
+
                     val toast = Toast.makeText(
                         applicationContext,
                         "You are already signed up",
                         Toast.LENGTH_SHORT
                     )
-                    toast.show()}
-
+                    toast.show()
+                }
 
 
         }
@@ -102,32 +130,31 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         calendarbtn.setOnClickListener {
-            calendarcard.visibility = if (calendarcard.visibility == androidx.cardview.widget.CardView.VISIBLE) {
-                androidx.cardview.widget.CardView.GONE
-            } else {
-                androidx.cardview.widget.CardView.VISIBLE
-            }
+            calendarcard.visibility =
+                if (calendarcard.visibility == androidx.cardview.widget.CardView.VISIBLE) {
+                    androidx.cardview.widget.CardView.GONE
+                } else {
+                    androidx.cardview.widget.CardView.VISIBLE
+                }
         }
 
-        calendar.setOnDateChangeListener {
-            _, year, month, dayOfMonth ->
+        calendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val selectedDate = "${dayOfMonth}/${month + 1}/$year"
             etBirthdate.setText(selectedDate)
             calendarcard.visibility = androidx.cardview.widget.CardView.GONE
         }
 
 
-
     }
 
-    private fun initComponents(){
-        btnSignUp= findViewById(R.id.btnSignUp)
-        etUser= findViewById(R.id.etEmail)
+    private fun initComponents() {
+        btnSignUp = findViewById(R.id.btnSignUp)
+        etUser = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         loginlink = findViewById(R.id.loginlinktv)
         switchbutton = findViewById(R.id.toggleusertype)
-        etName= findViewById(R.id.etNewName)
-        etLastName= findViewById(R.id.etNewLastName)
+        etName = findViewById(R.id.etNewName)
+        etLastName = findViewById(R.id.etNewLastName)
         etBirthdate = findViewById(R.id.etNewBirthdate)
         calendarbtn = findViewById(R.id.calendarbtn)
         calendarcard = findViewById(R.id.calendarcard)

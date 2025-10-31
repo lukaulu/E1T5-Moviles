@@ -4,10 +4,15 @@ import android.content.ClipDescription
 
 data class Workout (
 
-    val name: String = "",
-    val level: String ="",
-    val exercises : List<Exercise>,
+    var name: String = "",
+    var level: String ="",
+    var exercises : List<Exercise>,
+    var url: String = ""
 
 ){
+    constructor(name: String,level: String) : this(name,level, emptyList(),""){
+        this.name = name
+        this.level = level
+    }
 
 }

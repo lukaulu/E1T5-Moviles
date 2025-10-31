@@ -7,18 +7,21 @@ import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 import com.example.newgymapp.R
 import com.example.newgymapp.model.Workout
 
-class WorkoutViewHolder (view: View): RecyclerView.ViewHolder(view){
+class WorkoutViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    private val tvName:TextView = view.findViewById(R.id.tvName)
-    private val ivWorkout:ImageView = view.findViewById(R.id.imgviewitem)
-    private val ivLevel:ImageView = view.findViewById(R.id.imglevelitem)
+    private val tvName: TextView = view.findViewById(R.id.tvName)
+    private val ivWorkout: ImageView = view.findViewById(R.id.imgviewitem)
+    private val ivLevel: ImageView = view.findViewById(R.id.imglevelitem)
 
-    fun render(workout: Workout){
+    fun render(workout: Workout) {
         tvName.text = workout.name
+
+
         var link = "@drawable/" + workout.name.lowercase().trim() + ".png"
         val ctx = itemView.context
 
@@ -30,19 +33,25 @@ class WorkoutViewHolder (view: View): RecyclerView.ViewHolder(view){
         if (resId != 0) {
             ivWorkout.setImageResource(resId)
         } else {
-            // fallback
-            ivWorkout.setImageResource(android.R.drawable.ic_menu_report_image)
+            Glide.with(itemView.context)
+                .load(workout.url)
+                .placeholder(R.drawable.heavyspace_bg)
+                .error(R.drawable.heavyspace_bg)
+                .into(ivWorkout)
         }
+
 
         var levellink = ""
         Log.i("WORKOUT_LEVEL", workout.level)
-        if (workout.level == "Begginer"){
-            levellink = "levelbegginer"
-        } else if (workout.level == "Middle"){
+        if (workout.level == "Beginner") {
+            levellink = "levelbeginner"
+        } else if (workout.level == "Middle") {
             levellink = "levelmiddle"
-        } else if (workout.level == "Advanced"){
+        } else if (workout.level == "Advanced") {
             levellink = "leveladvanced"
         }
+
+
 
         levellink = "@drawable/" + levellink
         val levelctx = itemView.context
@@ -50,7 +59,8 @@ class WorkoutViewHolder (view: View): RecyclerView.ViewHolder(view){
         //sacar el id desde la carpeta drawable
         val afterSlashlevel = levellink.substringAfterLast('/', levellink)
         val resNameLevel = afterSlashlevel.substringBeforeLast('.', afterSlashlevel)
-        val resIdLevel = levelctx.resources.getIdentifier(resNameLevel, "drawable", levelctx.packageName)
+        val resIdLevel =
+            levelctx.resources.getIdentifier(resNameLevel, "drawable", levelctx.packageName)
 
         if (resIdLevel != 0) {
             ivLevel.setImageResource(resIdLevel)

@@ -9,6 +9,7 @@ data class HistoricalWorkout (
     val level: String ="",
     val time : Number = 0,
     val date : String = "",
+    val percentage: Number = 0
 
 
 ){
