@@ -15,8 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-private lateinit var btnSignUp : Button;
-private lateinit var btnLogin : Button;
+private lateinit var btnSignUp: Button;
+private lateinit var btnLogin: Button;
 
 private val auth = FirebaseSingleton.auth
 
@@ -24,25 +24,29 @@ private val auth = FirebaseSingleton.auth
 class MainActivity : AppCompatActivity() {
 
 
+    //al empezar la app, chequea si hay un usuario logueado
     override fun onStart() {
         super.onStart()
+        //el auth es de firebase, para ver usuarios y asi
         var currentUser = auth.currentUser
-        if(currentUser != null){
-
+        if (currentUser != null) {
+            //se usa una corrutina para no bloquear el hilo principal, ya que se llama a la bd y no es instantaneo
             CoroutineScope(Dispatchers.IO).launch {
+
+                //mira si es trainer o no y hace el intent, que basicamente es ir a otra actividad
                 val trainer = isTrainer()
-                    if (trainer) {
-                        Log.i("MAIN_ACTIVITY", "User is a trainer")
-                        val intent = Intent(this@MainActivity, TrainerHomeActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        Log.i("MAIN_ACTIVITY", "User is not a trainer")
-                        val intent = Intent(this@MainActivity, ClientHomeActivity::class.java)
-                        startActivity(intent)
+                if (trainer) {
+                    Log.i("MAIN_ACTIVITY", "User is a trainer")
+                    val intent = Intent(this@MainActivity, TrainerHomeActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Log.i("MAIN_ACTIVITY", "User is not a trainer")
+                    val intent = Intent(this@MainActivity, ClientHomeActivity::class.java)
+                    startActivity(intent)
                 }
             }
 
-
+            //mensaje de bienvenida
             val toast = Toast.makeText(
                 applicationContext,
                 "Wellcome back " + currentUser?.email + "!",
@@ -54,9 +58,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    private fun  initListeners(){
+    private fun initListeners() { //inicializa los botones para ir a las otras actividades
 
         btnSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -88,16 +88,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initComponents(){
+    private fun initComponents() { //asocia los botones con los del layout
         btnSignUp = findViewById(R.id.btnSignUpMain);
-        btnLogin = findViewById<Button>(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnLogin);
     }
 
 
-    suspend fun isTrainer() : Boolean {
+    suspend fun isTrainer(): Boolean { //funcion que mira si el usuario es trainer o no
         var currentUser = auth.currentUser
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
-        var user = User("", "", "", "", "", false)
 
         for (userDoc in userSnapshot.documents) {
             if (userDoc.getString("email") == currentUser?.email) {
@@ -112,66 +111,5 @@ class MainActivity : AppCompatActivity() {
         }
         return false
     }
-        /*
-    suspend fun dbCharge() {
 
-
-
-        var users = mutableListOf<User>()
-        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
-
-        for (userDoc in userSnapshot.documents) {
-            val name = userDoc.getString("name") ?: ""
-            val lastName = userDoc.getString("lastName") ?: ""
-            val email = userDoc.getString("email") ?: ""
-            val password = userDoc.getString("password") ?: ""
-            val trainer = userDoc.getBoolean("trainer") ?: ""
-
-
-            users.add(User(
-                name, lastName, email, password, trainer as Boolean
-            ))
-
-        }
-
-        var workouts = mutableListOf<Workout>()
-        val workoutSnapshot = FirebaseSingleton.db.collection("workouts").get().await()
-
-        for (workoutDoc in workoutSnapshot.documents) {
-            val name = workoutDoc.getString("name") ?: ""
-            val level = workoutDoc.getString("level") ?: ""
-
-
-            val exercisesRaw = workoutDoc.get("exercises") as? List<Map<String, Any>>
-
-
-            val exercisesList = exercisesRaw?.map { exerciseMap ->
-
-                Exercise(
-                    exName = exerciseMap["exName"] as? String ?: "",
-                    reps = exerciseMap["repetitions"] as? Long ?: 0,
-                    sets = exerciseMap["series"] as? Long ?: 0
-                )
-            } ?: emptyList()
-
-
-            workouts.add(
-                Workout(
-                    name = name,
-                    level = level,
-                    exercises = exercisesList
-                )
-            )
-        }
-
-
-
-        return ;
-    }
-
-
-
- */
-
-
-    }
+}

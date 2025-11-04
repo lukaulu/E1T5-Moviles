@@ -22,12 +22,17 @@ class HistoricalViewHolder (view: View): RecyclerView.ViewHolder(view){
 
 
     fun render(historical : HistoricalWorkout){
-        Log.i("HISTORICAL_WORKOUT", historical.toString())
-        tvhistoricalName.text = historical.name
-        tvhistoricalLevel.text = historical.level
-        tvhistoricalTime.text = "${historical.time}secs"
-        tvhistoricalDate.text = historical.date
-        tvhistoricalpercentage.text = "${historical.percentage}%"
+        if (historical.name.isEmpty()){
+
+        }else{
+            Log.i("HISTORICAL_WORKOUT", historical.toString())
+            tvhistoricalName.text = historical.name
+            tvhistoricalLevel.text = historical.level
+            tvhistoricalTime.text = "${historical.time}secs"
+            tvhistoricalDate.text = historical.date
+            tvhistoricalpercentage.text = "${historical.percentage}%"
+
+        }
 
 
 

@@ -136,7 +136,7 @@ class TrainerHomeActivity : AppCompatActivity() {
             }
 
         }
-        addworkoutbtn.setOnClickListener {
+        addworkoutbtn.setOnClickListener { //añadir workout a la bd
             val nameToAdd = nametoaddetv.text.toString()
             val urlToAdd = urltoadd.text.toString()
             val levelToAdd = when (leveltoaddRG.checkedRadioButtonId) {
@@ -151,7 +151,8 @@ class TrainerHomeActivity : AppCompatActivity() {
             val newWorkout = Workout(
                 name = nameToAdd,
                 level = levelToAdd,
-                exercises = listOf() // Empty list of exercises for now
+                exercises = listOf(),
+                url = urlToAdd
             )
 
             CoroutineScope(Dispatchers.IO).launch {

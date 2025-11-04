@@ -29,8 +29,6 @@ private lateinit var etBirthdate: EditText;
 private lateinit var calendarbtn: ImageButton;
 private lateinit var calendarcard: androidx.cardview.widget.CardView;
 private lateinit var calendar: CalendarView;
-
-
 private var db = FirebaseSingleton.db
 
 class SignUpActivity : AppCompatActivity() {
@@ -53,11 +51,14 @@ class SignUpActivity : AppCompatActivity() {
     private fun initListener() {
         btnSignUp.setOnClickListener {
             val auth = Firebase.auth
-            auth.createUserWithEmailAndPassword(etUser.text.toString(), etPassword.text.toString())
+            auth.createUserWithEmailAndPassword(
+                etUser.text.toString(),
+                etPassword.text.toString()
+            ) //se crea el usuario en firebase auth
                 .addOnSuccessListener {
 
-
-                    var newuser = User(
+                    //si funciona, se inserta en la bd
+                    var newuser = User( // se crea el objeto usuario
                         email = etUser.text.toString(),
                         password = etPassword.text.toString(),
                         name = etName.text.toString(),
@@ -66,12 +67,14 @@ class SignUpActivity : AppCompatActivity() {
                         trainer = false
 
                     )
+                    //el trainer se asigna segun el switch
                     if (switchbutton.isChecked) {
                         newuser.trainer = true
                     } else {
                         newuser.trainer = false
                     }
 
+                    //busca la coleccion users y añade el nuevo usuario
                     db.collection("users").add(newuser)
                         .addOnSuccessListener {
                             Log.i("UCM", "usuario insertado en la bd con exito")
@@ -80,16 +83,18 @@ class SignUpActivity : AppCompatActivity() {
                         }
 
                     Log.i("UCM", "usuario insertado")
-                    val intent = Intent(
-                        this,
-                        if (newuser.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
-                    )
+                    val intent =
+                        Intent( //una vez insertado y creado en el auth de firestore, va a la home correspondiente
+                            this,
+                            if (newuser.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
+                        )
                     Log.i("UCM", "${intent}")
                     startActivity(intent)
 
-                }.addOnFailureListener {
+                }.addOnFailureListener {// si no funciona, muestra mensajes de error
                     Log.i("UCM", "error de insercion de usuario")
 
+                    //validacion de campos vacios
                     if (etUser.text.toString().isEmpty() || etPassword.text.toString()
                             .isEmpty() || etName.text.toString()
                             .isEmpty() || etLastName.text.toString()
@@ -102,9 +107,8 @@ class SignUpActivity : AppCompatActivity() {
                         )
                         toast.show()
 
-                    }else if (
-                        etPassword.text.toString().length < 6
-                    ){
+                    } else if (etPassword.text.toString().length < 6) { //validacion de longitud de contraseña
+
                         val toast = Toast.makeText(
                             applicationContext,
                             "Password must be at least 6 characters",
@@ -114,7 +118,7 @@ class SignUpActivity : AppCompatActivity() {
 
                     }
 
-                    val toast = Toast.makeText(
+                    val toast = Toast.makeText( //mensaje generico de error
                         applicationContext,
                         "You are already signed up",
                         Toast.LENGTH_SHORT
@@ -129,7 +133,7 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        calendarbtn.setOnClickListener {
+        calendarbtn.setOnClickListener { //muestra u oculta el calendario al pulsar el boton
             calendarcard.visibility =
                 if (calendarcard.visibility == androidx.cardview.widget.CardView.VISIBLE) {
                     androidx.cardview.widget.CardView.GONE

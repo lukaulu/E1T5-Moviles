@@ -9,7 +9,7 @@
     android:background="@color/Black">
 
     <ImageView
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:id="@+id/imageHV"
         android:src="@drawable/heavyspace_bg"
         android:layout_width="300dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/imageHV"
         android:textColor="@color/White"
         android:backgroundTint="@color/HV"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:textSize="14sp">
     </Button>
 
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@id/btnSignUpMain"
         android:textColor="@color/White"
         android:backgroundTint="@color/HV"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:textSize="14sp">
     </Button>
 </androidx.constraintlayout.widget.ConstraintLayout>

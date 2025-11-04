@@ -48,6 +48,7 @@ class ClientHomeActivity : AppCompatActivity() {
     private lateinit var profiletv: TextView
     private lateinit var historicalButton: ImageButton;
     private lateinit var historicalCard: CardView
+
     // profile comps
     private lateinit var profilechangercv: CardView;
     private lateinit var profilebtn: ImageButton;
@@ -63,14 +64,9 @@ class ClientHomeActivity : AppCompatActivity() {
     private lateinit var profileurl: EditText;
     private lateinit var verifyimagebtn: ImageButton;
     private lateinit var applybtn: Button;
-
-    private lateinit var settingsbtn: ImageView
-    private lateinit var languagebtn: ImageView
-    private lateinit var themebtn: ImageView
-    private lateinit var settingscv: CardView
-
-
-
+    private lateinit var lvl1tv: TextView
+    private lateinit var lvl2tv: TextView
+    private lateinit var lvl3tv: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,12 +88,14 @@ class ClientHomeActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
+        //boton de logout
         logout.setOnClickListener {
             auth.signOut()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
+        // filtro de niveles
         filterRG.setOnCheckedChangeListener { group, checkedId ->
             var filteredWorkouts: List<Workout> = when (checkedId) {
                 R.id.beginnerRB -> {
@@ -125,6 +123,7 @@ class ClientHomeActivity : AppCompatActivity() {
             workoutAdapter.notifyDataSetChanged()
         }
 
+        // botones para mostrar y ocultar cards de historial y perfil
         historicalButton.setOnClickListener {
             if (historicalCard.visibility == CardView.VISIBLE) {
                 historicalCard.visibility = CardView.GONE
@@ -144,6 +143,7 @@ class ClientHomeActivity : AppCompatActivity() {
             }
         }
 
+        // botones de aplicacion de cambios de perfil y verificacion de imagen
         applybtn.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 dbUpdateUser()
@@ -178,16 +178,6 @@ class ClientHomeActivity : AppCompatActivity() {
             }
         }
 
-        settingsbtn.setOnClickListener {
-            if (themebtn.visibility == ImageButton.VISIBLE) {
-                themebtn.visibility = ImageButton.GONE
-                languagebtn.visibility = ImageButton.GONE
-            } else {
-                themebtn.visibility = ImageButton.VISIBLE
-                languagebtn.visibility = ImageButton.VISIBLE
-            }
-        }
-
 
     }
 
@@ -217,17 +207,14 @@ class ClientHomeActivity : AppCompatActivity() {
         profilepic = findViewById(R.id.porfilepic)
         applybtn = findViewById(R.id.applybtn)
         verifyimagebtn = findViewById(R.id.verifyimagebtn)
-
-        settingsbtn = findViewById(R.id.settingsbtn)
-        languagebtn = findViewById(R.id.languagebtn)
-        themebtn = findViewById(R.id.themebtn)
-        settingscv = findViewById(R.id.settingscv)
-
+        lvl1tv = findViewById(R.id.lvl1txt)
+        lvl2tv = findViewById(R.id.lvl2txt)
+        lvl3tv = findViewById(R.id.lvl3txt)
 
 
     }
 
-    private fun initUI() {
+    private fun initUI() { // inicializacion de recyclers y carga de datos
         val workoutorder = mapOf(
             "Beginner" to 1,
             "Middle" to 2,
@@ -238,7 +225,7 @@ class ClientHomeActivity : AppCompatActivity() {
         rvWorkout.adapter = workoutAdapter
 
         CoroutineScope(Dispatchers.IO).launch {
-            workouts = dbChargeWorkouts()
+            workouts = dbChargeWorkouts() // carga de workouts desde la bd
 
             withContext(Dispatchers.Main) {
                 workoutAdapter.workouts = workouts.sortedBy { workoutorder[it.level] }
@@ -248,13 +235,13 @@ class ClientHomeActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val pfpurl = dbPFP()
+            val pfpurl = dbPFP() // carga de la url de la foto de perfil desde la bd
             withContext(Dispatchers.Main) {
                 Log.i("UCM", "PFP URL: $pfpurl")
                 if (pfpurl.isNotBlank()) {
                     Glide.with(this@ClientHomeActivity)
                         .load(pfpurl)
-                        .into(profilepiceditor)
+                        .into(profilepiceditor)//recupera la imagen de perfil y la muestra en los imageview correspondientes
 
                     Glide.with(this@ClientHomeActivity)
                         .load(pfpurl)
@@ -267,21 +254,21 @@ class ClientHomeActivity : AppCompatActivity() {
             }
         }
 
-
-
-
-
-
         historicalAdapter = HistoricalAdapter(historical)
         rvHistorical.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvHistorical.adapter = historicalAdapter
 
         CoroutineScope(Dispatchers.IO).launch {
-            historical = dbChargeHistorical()
+            historical = dbChargeHistorical()// carga de historial desde la bd
 
             withContext(Dispatchers.Main) {
-                historicalAdapter.historical = historical
-                historicalAdapter.notifyDataSetChanged()
+                if (historical.isEmpty()) {
+                    historicalAdapter.historical = historical
+                    historicalAdapter.notifyDataSetChanged()
+                } else {
+                    historicalAdapter.historical = historical
+                    historicalAdapter.notifyDataSetChanged()
+                }
 
             }
         }
@@ -293,11 +280,24 @@ class ClientHomeActivity : AppCompatActivity() {
     suspend fun dbChargeWorkouts(): List<Workout> {
 
         var workouts = mutableListOf<Workout>()
-        val workoutSnapshot = FirebaseSingleton.db.collection("workouts").get().await()
+        val workoutSnapshot = FirebaseSingleton.db.collection("workouts").get()
+            .await() // obtiene la coleccion workouts de la bd
 
-        for (workoutDoc in workoutSnapshot.documents) {
+        //contadores para los niveles
+        var contbeginner = 0
+        var contmiddle = 0
+        var contadvanced = 0
+
+        for (workoutDoc in workoutSnapshot.documents) { //recupera los datos de cada workout
             val name = workoutDoc.getString("name") ?: ""
             val level = workoutDoc.getString("level") ?: ""
+            val url = workoutDoc.getString("url") ?: ""
+
+            when (level) { // incrementa los contadores segun el nivel
+                "Beginner" -> contbeginner += 1
+                "Middle" -> contmiddle += 1
+                "Advanced" -> contadvanced += 1
+            }
 
 
             val exercisesRaw = workoutDoc.get("exercises") as? List<Map<String, Any>>
@@ -313,55 +313,66 @@ class ClientHomeActivity : AppCompatActivity() {
             } ?: emptyList()
 
 
-            workouts.add(
+            workouts.add( // crea el objeto workout y lo añade a la lista
                 Workout(
                     name = name,
                     level = level,
                     exercises = exercisesList,
+                    url = url
                 )
             )
         }
+        withContext(Dispatchers.Main) { // actualiza los textviews de contadores en la UI
+            lvl1tv.text = contbeginner.toString()
+            lvl2tv.text = contmiddle.toString()
+            lvl3tv.text = contadvanced.toString()
+        }
+
 
         return workouts
 
     }
 
     suspend fun dbChargeHistorical(): List<HistoricalWorkout> {
-        Log.i("UCM", "llega 2")
+
 
         var historicalworkouts = mutableListOf<HistoricalWorkout>()
         val usersSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        Log.i("UCM","${profiletv.text}@gmail.com")
 
-// 2. Iterar sobre cada documento (usuario)
+        Log.i("UCM",auth.currentUser?.email.toString())
+
+
         for (userDocument in usersSnapshot.documents) {
-            val userId = userDocument.id
-            Log.i("UCM", "Procesando usuario ID: $userId")
+            if (auth.currentUser?.email.toString() == ("${profiletv.text}@gmail.com")) {
+                val userId = userDocument.id
+                Log.i("UCM", "Procesando usuario ID: $userId")
 
-            // 3. Obtener la subcolección de este documento de usuario
-            val subcollectionSnapshot = userDocument.reference
-                .collection("historicalWorkouts")
-                .get()
-                .await()
-            Log.i("UCM", subcollectionSnapshot.documents.size.toString())
-            for (subDoc in subcollectionSnapshot.documents) {
 
-                val name = subDoc.getString("workoutName") ?: ""
-                val level = subDoc.getString("level") ?: ""
-                val time = subDoc.getLong("time") ?: 0
-                val date = subDoc.getString("date") ?: ""
-                val percentage = subDoc.getLong("percentage") ?: 0
+                val subcollectionSnapshot = userDocument.reference
+                    .collection("historicalWorkouts")
+                    .get()
+                    .await()
+                Log.i("UCM", subcollectionSnapshot.documents.size.toString())
+                for (subDoc in subcollectionSnapshot.documents) {
 
-                historicalworkouts.add(
-                    HistoricalWorkout(
-                        name = name,
-                        level = level,
-                        time = time,
-                        date = date,
-                        percentage = percentage
+                    val name = subDoc.getString("workoutName") ?: ""
+                    val level = subDoc.getString("level") ?: ""
+                    val time = subDoc.getLong("time") ?: 0
+                    val date = subDoc.getString("date") ?: ""
+                    val percentage = subDoc.getLong("percentage") ?: 0
+
+                    historicalworkouts.add(
+                        HistoricalWorkout(
+                            name = name,
+                            level = level,
+                            time = time,
+                            date = date,
+                            percentage = percentage
+                        )
                     )
-                )
 
-
+                }
             }
         }
 
@@ -369,33 +380,35 @@ class ClientHomeActivity : AppCompatActivity() {
 
     }
 
-    suspend fun dbUpdateUser() {
+    suspend fun dbUpdateUser() { // funcion para actualizar los datos del usuario en la bd
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
         var user = User("", "", "", "", "", false)
 
         for (userDoc in userSnapshot.documents) {
             if (userDoc.getString("email") == auth.currentUser?.email.toString()) {
-                user = User(
-                    userDoc.getString("email") ?: "",
-                    userDoc.getString("password") ?: "",
-                    profilename.text.toString().trim().ifEmpty { userDoc.getString("name") ?: "" },
-                    profilelastname.text.toString().trim()
-                        .ifEmpty { userDoc.getString("lastName") ?: "" },
-                    profilebirthday.text.toString().trim()
-                        .ifEmpty { userDoc.getString("birthdate") ?: "" },
-                    userDoc.getBoolean("trainer") ?: false,
-                    profileurl.text.toString().trim()
-                        .ifEmpty { userDoc.getString("profilepicurl") ?: "" }
-                )
+                user =
+                    User(// crea el objeto usuario con los datos actualizados o los que ya tenia si no se han modificado
+                        userDoc.getString("email") ?: "",
+                        userDoc.getString("password") ?: "",
+                        profilename.text.toString().trim()
+                            .ifEmpty { userDoc.getString("name") ?: "" },
+                        profilelastname.text.toString().trim()
+                            .ifEmpty { userDoc.getString("lastName") ?: "" },
+                        profilebirthday.text.toString().trim()
+                            .ifEmpty { userDoc.getString("birthdate") ?: "" },
+                        userDoc.getBoolean("trainer") ?: false,
+                        profileurl.text.toString().trim()
+                            .ifEmpty { userDoc.getString("profilepicurl") ?: "" }
+                    )
 
-                db.collection("users").document(userDoc.id).set(user)
+                db.collection("users").document(userDoc.id).set(user) //setea el usuario en la bd
             }
 
 
         }
     }
 
-    suspend fun dbPFP(): String {
+    suspend fun dbPFP(): String { // carga la url de la foto de perfil desde la bd
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
         var user = User("", "", "", "", "", false)
 

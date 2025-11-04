@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-private lateinit var etEmail : EditText
-private lateinit var etPassword : EditText
+private lateinit var etEmail: EditText
+private lateinit var etPassword: EditText
 private lateinit var btnLogin: Button
 private lateinit var signuplink: TextView
 
@@ -44,14 +44,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        btnLogin.setOnClickListener {
-            val auth = FirebaseSingleton.auth
-            var user = User("","","","", "", false)
 
+        btnLogin.setOnClickListener {
+
+            val auth = FirebaseSingleton.auth
+            var user = User("", "", "", "", "", false)
+
+            //se llama a la bd para cargar el usuario
             CoroutineScope(Dispatchers.IO).launch {
                 user = usersChargeDB()
 
             }
+            //validacion de campos vacios
             if (etEmail.text.toString().isEmpty() || etPassword.text.toString().isEmpty()) {
                 Toast.makeText(
                     applicationContext,
@@ -59,37 +63,39 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-            }else {
-                auth.signInWithEmailAndPassword(
+            } else {
+                auth.signInWithEmailAndPassword( //intenta logear con firebase
                     etEmail.text.toString() + "@gmail.com",
                     etPassword.text.toString()
                 )
                     .addOnSuccessListener {
                         Log.i("UCM", "usuario logeado")
 
-                        val intent = Intent(
+                        val intent = Intent( // si tiene exito, va a la home correspondiente
                             this,
-                            if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
+                            if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java // un if inline para elegir la actividad segun si es trainer o no
                         )
                         Log.i("UCM", "${intent}")
                         startActivity(intent)
                     }
-                    .addOnFailureListener {
-                        val intent = Intent(
-                            this,
-                            if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
-                        )
+                    .addOnFailureListener {//aunque no este en firebase como user, puede estar en la bd, asi que se comprueba ahi
+                        val intent =
+                            Intent( //se prepara el intent para la home correspondiente, ya que no se puede dentro de la corrutina
+                                this,
+                                if (user.trainer) TrainerHomeActivity::class.java else ClientHomeActivity::class.java
+                            )
                         CoroutineScope(Dispatchers.IO).launch {
-                            val login = usersLogDB()
+                            val login =
+                                usersLogDB() //comprueba en la bd si el usuario y contraseña son correctos
                             withContext(Dispatchers.Main) {
                                 if (login) {
-                                    auth.createUserWithEmailAndPassword(
+                                    auth.createUserWithEmailAndPassword( //si el usuario esta en la bd pero no en firebase como user, lo crea (por ejemplo si se crea a mano en la bd)
                                         etEmail.text.toString() + "@gmail.com",
                                         etPassword.text.toString()
                                     ).addOnSuccessListener {
 
-
                                         startActivity(intent)
+
                                     }.addOnFailureListener { ex ->
                                         Toast.makeText(
                                             applicationContext,
@@ -97,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
-                                } else {
+                                } else { //si no esta en la bd ni en el user de firebase, mensaje de error
                                     Log.i("UCM", "Error login")
                                     Toast.makeText(
                                         applicationContext,
@@ -112,11 +118,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Listener separado para el link de signup
-        signuplink.setOnClickListener { val intent = Intent(this, SignUpActivity::class.java)
+        signuplink.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
 
         }
-
 
 
     }
@@ -128,12 +134,14 @@ class LoginActivity : AppCompatActivity() {
         signuplink = findViewById(R.id.signuplinktv)
     }
 
-    suspend fun usersLogDB() : Boolean {
+    suspend fun usersLogDB(): Boolean {
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
 
         for (userDoc in userSnapshot.documents) {
-            if (userDoc.getString("email") == etEmail.text.toString() + "@gmail.com" &&
-                userDoc.getString("password") == etPassword.text.toString()) {
+            if (userDoc.getString("email")
+                    ?.lowercase() == (etEmail.text.toString() + "@gmail.com").lowercase() &&
+                userDoc.getString("password") == etPassword.text.toString()
+            ) {
 
                 Log.i("UCM", "login seteado a true")
 
@@ -144,23 +152,23 @@ class LoginActivity : AppCompatActivity() {
         return false
     }
 
-    suspend fun usersChargeDB() : User {
+    suspend fun usersChargeDB(): User {
         var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
-        var user = User("","","","", "", false)
+        var user = User("", "", "", "", "", false)
 
         for (userDoc in userSnapshot.documents) {
             if (userDoc.getString("email") == etEmail.text.toString() + "@gmail.com" &&
-                userDoc.getString("password") == etPassword.text.toString()) {
+                userDoc.getString("password") == etPassword.text.toString()
+            ) {
                 user = User(
                     userDoc.getString("email") ?: "",
                     userDoc.getString("password") ?: "",
                     userDoc.getString("name") ?: "",
                     userDoc.getString("lastName") ?: "",
-                 userDoc.getString("birthdate") ?: "",
+                    userDoc.getString("birthdate") ?: "",
                     userDoc.getBoolean("trainer") ?: false
                 )
             }
-
 
 
         }
