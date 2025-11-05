@@ -135,7 +135,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     suspend fun usersLogDB(): Boolean {
-        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        val userSnapshot = FirebaseSingleton.db.collection("users").get().await()
 
         for (userDoc in userSnapshot.documents) {
             if (userDoc.getString("email")
@@ -153,7 +153,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     suspend fun usersChargeDB(): User {
-        var userSnapshot = FirebaseSingleton.db.collection("users").get().await()
+        val userSnapshot = FirebaseSingleton.db.collection("users").get().await()
         var user = User("", "", "", "", "", false)
 
         for (userDoc in userSnapshot.documents) {

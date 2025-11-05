@@ -338,13 +338,15 @@ class ClientHomeActivity : AppCompatActivity() {
 
         var historicalworkouts = mutableListOf<HistoricalWorkout>()
         val usersSnapshot = FirebaseSingleton.db.collection("users").get().await()
-        Log.i("UCM","${profiletv.text}@gmail.com")
 
-        Log.i("UCM",auth.currentUser?.email.toString())
+
+
 
 
         for (userDocument in usersSnapshot.documents) {
-            if (auth.currentUser?.email.toString() == ("${profiletv.text}@gmail.com")) {
+            Log.i("UCM","${profiletv.text}@gmail.com")
+            Log.i("UCM",userDocument.getString("email").toString())
+            if (userDocument.getString("email").toString() == ("${profiletv.text}@gmail.com")) {
                 val userId = userDocument.id
                 Log.i("UCM", "Procesando usuario ID: $userId")
 
